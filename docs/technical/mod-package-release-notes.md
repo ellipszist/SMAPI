@@ -1,6 +1,9 @@
 &larr; [mod build config](./mod-build-config.md)
 
 ## Release notes
+## Upcoming release
+* Added ability to include arbitrary content-based mods to output.
+
 ### 4.2.0
 Released 05 September 2024 for SMAPI 3.13.0 or later.
 
