@@ -2277,7 +2277,7 @@ namespace StardewModdingAPI.Framework
                         }
                         catch (Exception ex)
                         {
-                            errors.Add($"{file.Name} file couoldn't be parsed: {ex.GetLogSummary()}");
+                            errors.Add($"{file.Name} file couldn't be parsed: {ex.GetLogSummary()}");
                         }
                     }
 
