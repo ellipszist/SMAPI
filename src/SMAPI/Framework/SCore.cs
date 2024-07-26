@@ -1912,7 +1912,14 @@ namespace StardewModdingAPI.Framework
                     this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}, ID: {mod.Manifest.UniqueID}) [content pack]...");
                 // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract -- mod may be invalid at this point
                 else if (mod.Manifest?.EntryDll != null)
-                    this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}{Path.DirectorySeparatorChar}{mod.Manifest.EntryDll}, ID: {mod.Manifest.UniqueID})..."); // don't use Path.Combine here, since EntryDLL might not be valid
+                {
+                    FileInfo assemblyFile = this.GetFileLookup(mod.DirectoryPath).GetFile(mod.Manifest.EntryDll!);
+                    var assemblyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(assemblyFile.FullName);
+                    string assemblyVersionString = "null";
+                    if (assemblyVersion != null)
+                        assemblyVersionString = assemblyVersion.FilePrivatePart == 0 ? $"{assemblyVersion.FileMajorPart}.{assemblyVersion.FileMinorPart}.{assemblyVersion.FileBuildPart}" : (assemblyVersion.FileVersion ?? "null");
+                    this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}{Path.DirectorySeparatorChar}{mod.Manifest.EntryDll}, ID: {mod.Manifest.UniqueID}, assembly version: {assemblyVersionString})..."); // don't use Path.Combine here, since EntryDLL might not be valid
+                }
                 else
                     this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}, ID: {mod.Manifest?.UniqueID ?? "<unknown>"})...");
             }
