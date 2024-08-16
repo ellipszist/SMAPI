@@ -17,6 +17,7 @@
     * Fixed `list_items` & `player_add` not handling dried items, pickled forage, smoked fish, and specific bait correctly.
     * Fixed `list_items` & `player_add` listing some flooring & wallpaper items twice.
     * Fixed `show_data_files` & `show_game_files` no longer working correctly (thanks to jakerosado!).
+  * Fixed some mod overlays mispositioned when your UI scale is non-100% and zoom level is 100%.
   * Updated mod compatibility list.
 
 * For mod authors:
