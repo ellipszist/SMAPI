@@ -38,6 +38,12 @@ namespace StardewModdingAPI.Framework.ModLoading.Rewriters.StardewValley_1_6
             return base.getFish(millisecondsAfterNibble, bait.ToString(), waterDepth, who, baitPotency, bobberTile, location) as Object;
         }
 
+        /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+        public LightSource getLightSource(int identifier)
+        {
+            return base.getLightSource(identifier.ToString());
+        }
+
         public Dictionary<string, string> GetLocationEvents()
         {
             return base.TryGetLocationEvents(out _, out Dictionary<string, string> events)
@@ -65,6 +71,12 @@ namespace StardewModdingAPI.Framework.ModLoading.Rewriters.StardewValley_1_6
         public string GetSeasonForLocation()
         {
             return base.GetSeasonKey();
+        }
+
+        /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+        public bool hasLightSource(int identifier)
+        {
+            return base.hasLightSource(identifier.ToString());
         }
 
         public bool isTileLocationOpenIgnoreFrontLayers(Location tile)
@@ -120,6 +132,18 @@ namespace StardewModdingAPI.Framework.ModLoading.Rewriters.StardewValley_1_6
             base.localSound(audioName, position);
         }
 
+        /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+        public new void makeHoeDirt(Vector2 tileLocation, bool ignoreChecks = false)
+        {
+            base.makeHoeDirt(tileLocation, ignoreChecks);
+        }
+
+        /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+        public bool moveObject(int oldX, int oldY, int newX, int newY, string unlessItemId)
+        {
+            return base.moveContents(oldX, oldY, newX, newY, unlessItemId);
+        }
+
         public void OnStoneDestroyed(int indexOfStone, int x, int y, Farmer who)
         {
             base.OnStoneDestroyed(indexOfStone.ToString(), x, y, who);
@@ -138,6 +162,18 @@ namespace StardewModdingAPI.Framework.ModLoading.Rewriters.StardewValley_1_6
         public void playSoundPitched(string audioName, int pitch, SoundContext soundContext = SoundContext.Default)
         {
             base.playSound(audioName, pitch: pitch, context: soundContext);
+        }
+
+        /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+        public void repositionLightSource(int identifier, Vector2 position)
+        {
+            base.repositionLightSource(identifier.ToString(), position);
+        }
+
+        /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+        public void removeLightSource(int identifier)
+        {
+            base.removeLightSource(identifier.ToString());
         }
 
 

@@ -278,6 +278,13 @@ namespace StardewModdingAPI.Framework.ModLoading.Rewriters.StardewValley_1_6
                 base.revealGiftTaste(npc.Name, item.ItemId);
         }
 
+        /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+        public static void showReceiveNewItemMessage(Farmer who, Item item)
+        {
+            Farmer.showReceiveNewItemMessage(who, item, item.Stack);
+        }
+
+
 
         /*********
         ** Private methods
