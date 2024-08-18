@@ -2224,25 +2224,46 @@ namespace StardewModdingAPI.Framework
             // read translation files
             var translations = new Dictionary<string, IDictionary<string, string>>();
             errors = new List<string>();
-            DirectoryInfo translationsDir = new(folderPath);
-            if (translationsDir.Exists)
             {
-                foreach (FileInfo file in translationsDir.EnumerateFiles("*.json"))
+                bool hasRootFiles = false;
+
+                foreach (var entry in this.GetTranslationFiles(folderPath))
                 {
-                    string locale = Path.GetFileNameWithoutExtension(file.Name.ToLower().Trim());
+                    // don't allow both top-level and directory translations
+                    if (entry.isRootFile)
+                        hasRootFiles = true;
+                    else if (hasRootFiles)
+                    {
+                        errors.Add($"Found translations in both top-level files (like i18n/{translations.Keys.FirstOrDefault() ?? "example"}.json) and subfolders (like i18n/{entry.locale}/{entry.file.Name}). Only the top-level files will be used. You may need to delete and reinstall this mod.");
+                        break;
+                    }
+
+                    // read file
+                    Dictionary<string, string>? data;
                     try
                     {
-                        if (!jsonHelper.ReadJsonFileIfExists(file.FullName, out IDictionary<string, string>? data))
+                        if (!jsonHelper.ReadJsonFileIfExists(entry.file.FullName, out data))
                         {
-                            errors.Add($"{file.Name} file couldn't be read"); // mainly happens when the file is corrupted or empty
+                            errors.Add($"{entry.relativePath} couldn't be read.");
                             continue;
                         }
-
-                        translations[locale] = data;
                     }
                     catch (Exception ex)
                     {
-                        errors.Add($"{file.Name} file couldn't be parsed: {ex.GetLogSummary()}");
+                        errors.Add($"{entry.relativePath} couldn't be parsed: {ex.GetLogSummary()}");
+                        continue;
+                    }
+
+                    // add translations
+                    if (!translations.TryGetValue(entry.locale, out IDictionary<string, string>? combinedData))
+                        translations[entry.locale] = data;
+                    else
+                    {
+                        foreach ((string key, string value) in data)
+                        {
+                            if (!combinedData.TryAdd(key, value))
+                                errors.Add($"Ignored duplicate translation key '{key}' in {entry.relativePath}.");
+                        }
                     }
                 }
             }
@@ -2262,10 +2283,41 @@ namespace StardewModdingAPI.Framework
                     }
                 }
                 if (duplicateKeys.Any())
-                    errors.Add($"{locale}.json has duplicate translation keys: [{string.Join(", ", duplicateKeys)}]. Keys are case-insensitive.");
+                    errors.Add($"Found duplicate translation keys for {locale}: [{string.Join(", ", duplicateKeys)}]. Keys are case-insensitive.");
             }
 
             return translations;
+        }
+
+        /// <summary>Get the translation files to load. This returns top-level files like <c>fr.json</c> first, followed by locale directory files like <c>fr/example.json</c>.</summary>
+        /// <param name="folderPath">The folder path to search.</param>
+        private IEnumerable<(string locale, bool isRootFile, string relativePath, FileInfo file)> GetTranslationFiles(string folderPath)
+        {
+            // get directory
+            DirectoryInfo translationsDir = new(folderPath);
+            if (!translationsDir.Exists)
+                yield break;
+
+            // get <locale>.json files
+            foreach (FileInfo file in translationsDir.EnumerateFiles("*.json"))
+            {
+                string locale = Path.GetFileNameWithoutExtension(file.Name.ToLower().Trim());
+
+                yield return new(locale, true, file.Name, file);
+            }
+
+            // read <locale>/*.json files
+            foreach (DirectoryInfo localeDir in translationsDir.EnumerateDirectories())
+            {
+                string locale = Path.GetFileName(localeDir.Name.ToLower().Trim());
+
+                foreach (FileInfo file in localeDir.EnumerateFiles("*.json"))
+                {
+                    string relativePath = Path.GetRelativePath(translationsDir.FullName, file.FullName);
+
+                    yield return new(locale, false, relativePath, file);
+                }
+            }
         }
 
         /// <summary>Get a file lookup for the given directory.</summary>
