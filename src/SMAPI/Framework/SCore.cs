@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -1905,27 +1906,34 @@ namespace StardewModdingAPI.Framework
         {
             errorDetails = null;
 
+            // get basic shared info
+            IFileLookup fileLookup = this.GetFileLookup(mod.DirectoryPath);
+            IManifest? manifest = mod.Manifest;
+            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract -- mod may be invalid at this point
+            FileInfo? assemblyFile = manifest?.EntryDll != null
+                ? fileLookup.GetFile(manifest.EntryDll)
+                : null;
+
             // log entry
             {
                 string relativePath = mod.GetRelativePathWithRoot();
+
                 if (mod.IsContentPack)
-                    this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}, ID: {mod.Manifest.UniqueID}) [content pack]...");
-                // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract -- mod may be invalid at this point
-                else if (mod.Manifest?.EntryDll != null)
+                    this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}, ID: {manifest?.UniqueID}) [content pack]...");
+                else if (manifest?.EntryDll != null)
                 {
-                    FileInfo assemblyFile = this.GetFileLookup(mod.DirectoryPath).GetFile(mod.Manifest.EntryDll!);
-                    var assemblyVersion = System.Diagnostics.FileVersionInfo.GetVersionInfo(assemblyFile.FullName);
-                    string assemblyVersionString = "null";
-                    if (assemblyVersion != null)
-                        assemblyVersionString = assemblyVersion.FilePrivatePart == 0 ? $"{assemblyVersion.FileMajorPart}.{assemblyVersion.FileMinorPart}.{assemblyVersion.FileBuildPart}" : (assemblyVersion.FileVersion ?? "null");
-                    this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}{Path.DirectorySeparatorChar}{mod.Manifest.EntryDll}, ID: {mod.Manifest.UniqueID}, assembly version: {assemblyVersionString})..."); // don't use Path.Combine here, since EntryDLL might not be valid
+                    FileVersionInfo version = FileVersionInfo.GetVersionInfo(assemblyFile!.FullName);
+                    string versionStr = version.FilePrivatePart == 0
+                        ? $"{version.FileMajorPart}.{version.FileMinorPart}.{version.FileBuildPart}"
+                        : $"{version.FileMajorPart}.{version.FileMinorPart}.{version.FileBuildPart}.{version.FilePrivatePart}";
+                    this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}{Path.DirectorySeparatorChar}{manifest.EntryDll}, ID: {manifest.UniqueID}, assembly version: {versionStr})..."); // don't use Path.Combine here, since EntryDLL might not be valid
                 }
                 else
-                    this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}, ID: {mod.Manifest?.UniqueID ?? "<unknown>"})...");
+                    this.Monitor.Log($"   {mod.DisplayName} (from {relativePath}, ID: {manifest?.UniqueID ?? "<unknown>"})...");
             }
 
             // add warning for missing update key
-            if (mod.HasID() && !suppressUpdateChecks.Contains(mod.Manifest!.UniqueID) && !mod.HasValidUpdateKeys())
+            if (mod.HasID() && !suppressUpdateChecks.Contains(manifest!.UniqueID) && !mod.HasValidUpdateKeys())
                 mod.SetWarning(ModWarning.NoUpdateKeys);
 
             // validate status
@@ -1936,11 +1944,10 @@ namespace StardewModdingAPI.Framework
                 errorReasonPhrase = mod.Error;
                 return false;
             }
-            IManifest manifest = mod.Manifest!;
 
             // validate dependencies
             // Although dependencies are validated before mods are loaded, a dependency may have failed to load.
-            foreach (IManifestDependency dependency in manifest.Dependencies.Where(p => p.IsRequired))
+            foreach (IManifestDependency dependency in manifest!.Dependencies.Where(p => p.IsRequired))
             {
                 // not missing
                 if (this.ModRegistry.Get(dependency.UniqueID) != null)
@@ -1963,7 +1970,6 @@ namespace StardewModdingAPI.Framework
             if (mod.IsContentPack)
             {
                 IMonitor monitor = this.LogManager.GetMonitor(manifest.UniqueID, mod.DisplayName);
-                IFileLookup fileLookup = this.GetFileLookup(mod.DirectoryPath);
                 GameContentHelper gameContentHelper = new(this.ContentCore, mod, mod.DisplayName, monitor, this.Reflection);
                 IModContentHelper modContentHelper = new ModContentHelper(this.ContentCore, mod.DirectoryPath, mod, mod.DisplayName, gameContentHelper.GetUnderlyingContentManager(), this.Reflection);
                 TranslationHelper translationHelper = new(mod, contentCore.GetLocale(), contentCore.Language);
@@ -1979,15 +1985,12 @@ namespace StardewModdingAPI.Framework
             // load as mod
             else
             {
-                // get mod info
-                FileInfo assemblyFile = this.GetFileLookup(mod.DirectoryPath).GetFile(manifest.EntryDll!);
-
                 // load mod
                 ModAssemblyLoadContext modAssemblyLoadContext = new(mod);
                 Assembly modAssembly;
                 try
                 {
-                    modAssembly = assemblyLoader.Load(mod, assemblyFile, assumeCompatible: mod.DataRecord?.Status == ModStatus.AssumeCompatible, modAssemblyLoadContext);
+                    modAssembly = assemblyLoader.Load(mod, assemblyFile!, assumeCompatible: mod.DataRecord?.Status == ModStatus.AssumeCompatible, modAssemblyLoadContext);
                     modAssemblyLoadContexts.Add(modAssemblyLoadContext);
                     this.ModRegistry.TrackAssemblies(mod, modAssembly);
                 }
@@ -2007,7 +2010,7 @@ namespace StardewModdingAPI.Framework
                 catch (Exception ex)
                 {
                     errorReasonPhrase = "its DLL couldn't be loaded.";
-                    if (ex is BadImageFormatException && !EnvironmentUtility.Is64BitAssembly(assemblyFile.FullName))
+                    if (ex is BadImageFormatException && !EnvironmentUtility.Is64BitAssembly(assemblyFile!.FullName))
                         errorReasonPhrase = "it needs to be updated for 64-bit mode.";
 
                     errorDetails = $"Error: {ex.GetLogSummary()}";
