@@ -34,6 +34,7 @@
 * For the update check server:
   * Rewrote update checks for mods on CurseForge and ModDrop to use new export API endpoints.  
     _This should result in much faster update checks for those sites, and less chance of update-check errors when their servers are under heavy load._
+  * Added workaround for CurseForge auto-syncing prerelease versions with an invalid version number.
 
 * For the log parser:
   * Clicking a checkbox in the mod list now always only changes that checkbox, to allow hiding a single mod.
