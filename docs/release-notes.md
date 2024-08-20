@@ -47,6 +47,9 @@
     * `CustomLocations` entries which use the new [unique string ID](https://stardewvalleywiki.com/Modding:Common_data_field_types#Unique_string_ID) format;
     * `AddWarps` warps when a location name contains a dot.
 
+* For the web API:
+  * The [anonymized metrics for update check requests](technical/web.md#modsmetrics) now counts requests by SMAPI and game version.
+
 ## 4.0.8
 Released 21 April 2024 for Stardew Valley 1.6.4 or later.
 
@@ -165,6 +168,7 @@ Released 19 March 2024 for Stardew Valley 1.6.0 or later. See [release highlight
 
 * For the web UI:
   * Updated JSON validator for Content Patcher 2.0.0.
+  * Added [anonymized metrics for update check requests](technical/web.md#modsmetrics).
   * Fixed uploaded log/JSON file expiry alway shown as renewed.
   * Fixed update check for mods with a prerelease version tag not recognized by the ModDrop API. SMAPI now parses the version itself if needed.
 
