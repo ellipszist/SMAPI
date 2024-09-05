@@ -416,7 +416,10 @@ The NuGet package is generated automatically in `StardewModdingAPI.ModBuildConfi
 when you compile it.
 
 ## Release notes
-## Upcoming release
+## 4.2.0
+Released 05 September 2024 for SMAPI 3.13.0 or later.
+
+* Added support for `i18n` subfolders (thanks to spacechase0!).
 * Updated dependencies.
 
 ## 4.1.1
