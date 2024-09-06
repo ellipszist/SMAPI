@@ -40,6 +40,7 @@
   <ItemGroup>
     <!--project files-->
     <None Include="..\..\docs\technical\mod-package.md" Link="mod-package.md" />
+    <None Include="..\..\docs\technical\mod-package-release-notes.md" Link="release-notes.md" />
 
     <!--NuGet package files-->
     <None PackagePath="analyzers/dotnet/cs" Include="$(SolutionDir)/SMAPI.ModBuildConfig.Analyzer/bin/netstandard2.0/SMAPI.ModBuildConfig.Analyzer.dll" Pack="true" Visible="false" />
