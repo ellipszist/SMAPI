@@ -7,7 +7,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 
 namespace StardewModdingAPI.ModBuildConfig.Framework
 {
-    /// <summary>Manages the files that are part of a C# mod.</summary>
+    /// <summary>Manages the files that are part of the main C# mod.</summary>
     internal class CSharpModManager : IModFileManager
     {
         /*********
@@ -17,7 +17,7 @@ namespace StardewModdingAPI.ModBuildConfig.Framework
         private readonly string ManifestFileName = "manifest.json";
 
         /// <summary>The files that are part of the package.</summary>
-        private readonly IDictionary<string, FileInfo> Files;
+        private readonly Dictionary<string, FileInfo> Files = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The file extensions used by assembly files.</summary>
         private readonly ISet<string> AssemblyFileExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -78,8 +78,6 @@ namespace StardewModdingAPI.ModBuildConfig.Framework
                 throw new UserErrorException("Could not create mod package because the project folder wasn't found.");
             if (!Directory.Exists(targetDir))
                 throw new UserErrorException("Could not create mod package because no build output was found.");
-
-            this.Files = new Dictionary<string, FileInfo>(StringComparer.OrdinalIgnoreCase);
 
             // collect files
             foreach (Tuple<string, FileInfo> entry in this.GetPossibleFiles(projectDir, targetDir))

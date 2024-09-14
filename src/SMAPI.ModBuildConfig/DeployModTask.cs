@@ -63,8 +63,8 @@ namespace StardewModdingAPI.ModBuildConfig
         /// <summary>A comma-separated list of <see cref="ExtraAssemblyTypes"/> values which indicate which extra DLLs to bundle.</summary>
         public string BundleExtraAssemblies { get; set; }
 
-        /// <summary>A list of directories containing mods that do not need to built (such as Content Patcher) to bundle.</summary>
-        public ITaskItem[] ContentMods { get; set; }
+        /// <summary>A list of content pack folders to bundle with the mod.</summary>
+        public ITaskItem[] ContentPacks { get; set; }
 
 
         /*********
@@ -126,35 +126,46 @@ namespace StardewModdingAPI.ModBuildConfig
                 string[] ignoreFilePaths = this.GetCustomIgnoreFilePaths(this.IgnoreModFilePatterns).ToArray();
                 Regex[] ignoreFilePatterns = this.GetCustomIgnorePatterns(this.IgnoreModFilePaths).ToArray();
 
-                var modPackages = new Dictionary<string, IModFileManager> {
-                    { this.ModFolderName, new CSharpModManager(this.ProjectDir, this.TargetDir, ignoreFilePaths, ignoreFilePatterns, bundleAssemblyTypes, this.ModDllName, validateRequiredModFiles: this.EnableModDeploy || this.EnableModZip) }
+                var modPackages = new Dictionary<string, IModFileManager>
+                {
+                    [this.ModFolderName] = new CSharpModManager(this.ProjectDir, this.TargetDir, ignoreFilePaths, ignoreFilePatterns, bundleAssemblyTypes, this.ModDllName, validateRequiredModFiles: this.EnableModDeploy || this.EnableModZip)
                 };
 
-                if (this.ContentMods != null)
+                if (this.ContentPacks != null)
                 {
-                    foreach (ITaskItem item in this.ContentMods.Where(p => p.GetMetadata("Generator") == "ModBuildConfig"))
+                    foreach (ITaskItem item in this.ContentPacks)
                     {
-                        string contentPath = item.ItemSpec ?? throw new UserErrorException("Content Mod does not have the 'Include' attribute.");
-                        string contentName = item.GetMetadata("Link");
-                        string contentVersion = item.GetMetadata("Version");
+                        // get content folder path
+                        string contentPath = item.ItemSpec;
+                        if (string.IsNullOrWhiteSpace(contentPath))
+                            throw new UserErrorException("Content pack doesn't have the required 'Include' attribute.");
 
-                        this.Log.LogMessage(MessageImportance.High, $"[mod build package] Found content mod: {contentName} v{contentVersion} at {contentPath}.");
+                        // get folder name
+                        string folderName = item.GetMetadata("FolderName");
+                        if (string.IsNullOrWhiteSpace(folderName))
+                            folderName = Path.GetFileName(contentPath);
 
+                        // get version
+                        string version = item.GetMetadata("Version");
+
+                        // get options
                         ignoreFilePaths = this.GetCustomIgnoreFilePaths(item.GetMetadata("IgnoreModFilePatterns")).ToArray();
                         ignoreFilePatterns = this.GetCustomIgnorePatterns(this.IgnoreModFilePaths).ToArray();
+                        string rawValidateManifest = item.GetMetadata("ValidateManifest");
+                        bool validateManifest = string.IsNullOrEmpty(rawValidateManifest) || bool.Parse(rawValidateManifest);
 
-                        string validateString = item.GetMetadata("Validate");
-                        bool validate = string.IsNullOrEmpty(validateString) || bool.Parse(validateString);
+                        // apply
+                        this.Log.LogMessage(MessageImportance.High, $"[mod build package] Bundling content pack: {folderName} v{version} at {contentPath}.");
                         modPackages.Add(
-                            contentName,
-                            new ContentPatcherModManager(contentPath, contentVersion, ignoreFilePaths, ignoreFilePatterns, validate)
+                            folderName,
+                            new ContentPatcherModManager(this.ProjectDir, contentPath, version, ignoreFilePaths, ignoreFilePatterns, validateManifest)
                         );
                     }
                 }
                 // deploy mod files
                 if (this.EnableModDeploy)
                 {
-                    string outputPath = Path.Combine(this.GameModsDir, EscapeInvalidFilenameCharacters(this.ModFolderName));
+                    string outputPath = Path.Combine(this.GameModsDir, this.EscapeInvalidFilenameCharacters(this.ModFolderName));
                     this.Log.LogMessage(MessageImportance.High, $"[mod build package] Copying the mod files to {outputPath}...");
                     this.CreateModFolder(modPackages, outputPath);
                 }
@@ -162,7 +173,7 @@ namespace StardewModdingAPI.ModBuildConfig
                 // create release zip
                 if (this.EnableModZip)
                 {
-                    string zipName = EscapeInvalidFilenameCharacters($"{this.ModFolderName} {manifest.Version}.zip");
+                    string zipName = this.EscapeInvalidFilenameCharacters($"{this.ModFolderName} {manifest.Version}.zip");
                     string zipPath = Path.Combine(this.ModZipPath, zipName);
 
                     this.Log.LogMessage(MessageImportance.High, $"[mod build package] Generating the release zip at {zipPath}...");
@@ -196,7 +207,7 @@ namespace StardewModdingAPI.ModBuildConfig
                 if (property.Name == nameof(this.IgnoreModFilePatterns) && string.IsNullOrWhiteSpace(this.IgnoreModFilePatterns))
                     continue;
 
-                if (property.Name == nameof(this.ContentMods))
+                if (property.Name == nameof(this.ContentPacks))
                     continue;
 
                 string name = property.Name;
@@ -288,19 +299,22 @@ namespace StardewModdingAPI.ModBuildConfig
         /// <param name="outputPath">The folder path to create with the mod files.</param>
         private void CreateModFolder(IDictionary<string, IModFileManager> modPackages, string outputPath)
         {
-            foreach (var mod in modPackages) {
-                string modSpecificFolder = modPackages.Count == 1 ? outputPath : Path.Combine(outputPath, EscapeInvalidFilenameCharacters(mod.Key));
+            foreach (var mod in modPackages)
+            {
+                string relativePath = modPackages.Count == 1
+                    ? outputPath
+                    : Path.Combine(outputPath, this.EscapeInvalidFilenameCharacters(mod.Key));
+
                 foreach (var file in mod.Value.GetFiles())
                 {
                     string fromPath = file.Value.FullName;
-                    string toPath = Path.Combine(modSpecificFolder, file.Key);
+                    string toPath = Path.Combine(relativePath, file.Key);
 
                     Directory.CreateDirectory(Path.GetDirectoryName(toPath)!);
 
                     File.Copy(fromPath, toPath, overwrite: true);
                 }
             }
-
         }
 
         /// <summary>Create a release zip in the recommended format for uploading to mod sites.</summary>
@@ -313,15 +327,20 @@ namespace StardewModdingAPI.ModBuildConfig
             using Stream zipStream = new FileStream(zipPath, FileMode.Create, FileAccess.Write);
             using ZipArchive archive = new(zipStream, ZipArchiveMode.Create);
 
-            foreach (var mod in modPackages) {
-                string modFolder = EscapeInvalidFilenameCharacters(mod.Key);
+            foreach (var mod in modPackages)
+            {
+                string modFolder = this.EscapeInvalidFilenameCharacters(mod.Key);
                 foreach (var file in mod.Value.GetFiles())
                 {
                     string relativePath = file.Key;
                     FileInfo fileInfo = file.Value;
 
+                    string archivePath = modPackages.Count == 1
+                        ? $"{modFolder}/{relativePath}"
+                        : $"{this.ModFolderName}/{modFolder}/{relativePath}";
+
                     using Stream fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read);
-                    using Stream fileStreamInZip = archive.CreateEntry($"{modFolder}/{relativePath}").Open();
+                    using Stream fileStreamInZip = archive.CreateEntry(archivePath).Open();
                     fileStream.CopyTo(fileStreamInZip);
                 }
             }
@@ -329,7 +348,7 @@ namespace StardewModdingAPI.ModBuildConfig
 
         /// <summary>Get a copy of a filename with all invalid filename characters substituted.</summary>
         /// <param name="name">The filename.</param>
-        private static string EscapeInvalidFilenameCharacters(string name)
+        private string EscapeInvalidFilenameCharacters(string name)
         {
             foreach (char invalidChar in Path.GetInvalidFileNameChars())
                 name = name.Replace(invalidChar, '.');

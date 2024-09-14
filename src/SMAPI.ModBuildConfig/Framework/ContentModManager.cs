@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using StardewModdingAPI.Toolkit;
 using StardewModdingAPI.Toolkit.Framework;
 using StardewModdingAPI.Toolkit.Serialization;
 using StardewModdingAPI.Toolkit.Serialization.Models;
@@ -11,31 +12,36 @@ using StardewModdingAPI.Toolkit.Utilities;
 
 namespace StardewModdingAPI.ModBuildConfig.Framework
 {
-    /// <summary>Manages the files that are part of a content-based mod.</summary>
+    /// <summary>Manages the files that are part of a bundled content pack.</summary>
     internal class ContentPatcherModManager : IModFileManager
     {
+        /*********
+        ** Fields
+        *********/
+        /// <summary>The name of the manifest file.</summary>
         private readonly string ManifestFileName = "manifest.json";
 
         /// <summary>The files that are part of the package.</summary>
-        private readonly IDictionary<string, FileInfo> Files;
+        private readonly Dictionary<string, FileInfo> Files = new(StringComparer.OrdinalIgnoreCase);
+
 
         /*********
         ** Public methods
         *********/
         /// <summary>Construct an instance.</summary>
         /// <param name="projectDir">The folder containing the project files.</param>
+        /// <param name="contentPackDir">The absolute or relative path to the content pack folder.</param>
         /// <param name="version">The mod version.</param>
         /// <param name="ignoreFilePaths">The custom relative file paths provided by the user to ignore.</param>
         /// <param name="ignoreFilePatterns">Custom regex patterns matching files to ignore when deploying or zipping the mod.</param>
-        /// <param name="validateRequiredModFiles">Whether to validate that required mod files like the manifest are present.</param>
+        /// <param name="validateManifest">Whether to validate that the content pack's manifest is valid.</param>
         /// <exception cref="UserErrorException">The mod package isn't valid.</exception>
-        public ContentPatcherModManager(string projectDir, string version, string[] ignoreFilePaths, Regex[] ignoreFilePatterns, bool validateRequiredModFiles)
+        public ContentPatcherModManager(string projectDir, string contentPackDir, string version, string[] ignoreFilePaths, Regex[] ignoreFilePatterns, bool validateManifest)
         {
-            DirectoryInfo projectDirInfo = new DirectoryInfo(projectDir);
-            if(!projectDirInfo.Exists)
-                throw new UserErrorException($"The project directory '{projectDir}' for a Content Mod does not exist.");
-
-            this.Files = new Dictionary<string, FileInfo>(StringComparer.OrdinalIgnoreCase);
+            // get folders
+            DirectoryInfo projectDirInfo = new DirectoryInfo(Path.Combine(projectDir, contentPackDir));
+            if (!projectDirInfo.Exists)
+                throw GetError($"that folder doesn't exist at {projectDirInfo.FullName}");
 
             // collect files
             foreach (FileInfo entry in projectDirInfo.GetFiles("*", SearchOption.AllDirectories))
@@ -47,14 +53,15 @@ namespace StardewModdingAPI.ModBuildConfig.Framework
                     this.Files[relativePath] = file;
             }
 
-            // check for required files
-            if (validateRequiredModFiles)
+            // validate manifest
+            if (validateManifest)
             {
-                // manifest
-                FileInfo manifestFile = this.Files[this.ManifestFileName];
+                // get manifest file
+                if (!this.Files.TryGetValue(this.ManifestFileName, out FileInfo manifestFile))
+                    throw GetError($"it has no {this.ManifestFileName} file");
+
+                // parse file
                 Manifest manifest;
-                if (manifestFile == null)
-                    throw new UserErrorException($"Could not add Content Mod '{projectDir}' because no {this.ManifestFileName} was found in the project");
                 try
                 {
                     new JsonHelper().ReadJsonFileIfExists(manifestFile.FullName, out Manifest rawManifest);
@@ -62,18 +69,25 @@ namespace StardewModdingAPI.ModBuildConfig.Framework
                 }
                 catch (JsonReaderException ex)
                 {
-                    Exception exToShow = ex.InnerException ?? ex;
-                    throw new UserErrorException($"Could not add Content Mod '{projectDir}' because {this.ManifestFileName} is not valid JSON: {exToShow.Message}");
+                    throw GetError($"its {this.ManifestFileName} file isn't valid JSON: {ex.InnerException?.Message ?? ex.Message}");
                 }
+
                 // validate manifest fields
                 if (!ManifestValidator.TryValidateFields(manifest, out string error))
-                {
-                    throw new UserErrorException($"Could not add Content Mod '{projectDir}' because mod's {this.ManifestFileName} did not validate: {error}");
-                }
+                    throw GetError($"its {this.ManifestFileName} file is invalid: {error}");
+
+                // validate version
                 if (version == null)
-                    throw new UserErrorException($"Could not add Content Mod '{projectDir}' because no version was provided");
-                if(manifest.Version.ToString().CompareTo(version) != 0)
-                    throw new UserErrorException($"Could not add Content Mod '{projectDir}' because the version in the manifest.json file does not match the version {version} provided.");
+                    throw GetError("no Version value was provided");
+                if (!SemanticVersion.TryParse(version, out ISemanticVersion requiredVersion))
+                    throw GetError($"the provided Version value '{version}' isn't a valid semantic version");
+                if (manifest.Version.CompareTo(requiredVersion) != 0)
+                    throw GetError($"its {this.ManifestFileName} has version '{manifest.Version}' instead of the required '{requiredVersion}'");
+            }
+
+            UserErrorException GetError(string reasonPhrase)
+            {
+                return new UserErrorException($"The content pack at '{contentPackDir}' can't be loaded because {reasonPhrase}.");
             }
         }
 
@@ -94,18 +108,14 @@ namespace StardewModdingAPI.ModBuildConfig.Framework
             if (ignoreFilePaths.Any(p => p == relativePath) || ignoreFilePatterns.Any(p => p.IsMatch(relativePath)))
                 return true;
 
-            {
-                bool shouldIgnore =
-                    // release zips
-                    this.EqualsInvariant(file.Extension, ".zip")
+            // ignore special files
+            return
+                // release zips
+                this.EqualsInvariant(file.Extension, ".zip")
 
-                    // OS metadata files
-                    || this.EqualsInvariant(file.Name, ".DS_Store")
-                    || this.EqualsInvariant(file.Name, "Thumbs.db");
-                if (shouldIgnore)
-                    return true;
-            }
-            return false;
+                // OS metadata files
+                || this.EqualsInvariant(file.Name, ".DS_Store")
+                || this.EqualsInvariant(file.Name, "Thumbs.db");
         }
 
         // <summary>Get whether a string is equal to another case-insensitively.</summary>

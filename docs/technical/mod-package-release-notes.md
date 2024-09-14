@@ -2,7 +2,7 @@
 
 ## Release notes
 ## Upcoming release
-* Added ability to include arbitrary content-based mods to output.
+* You can now [bundle content packs with your mod](mod-package.md#bundle-content-packs) (thanks to abhiaagarwal!).
 
 ### 4.2.0
 Released 05 September 2024 for SMAPI 3.13.0 or later.
