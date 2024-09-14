@@ -8,7 +8,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 namespace StardewModdingAPI.ModBuildConfig.Framework
 {
     /// <summary>Manages the files that are part of the main C# mod.</summary>
-    internal class CSharpModManager : IModFileManager
+    internal class MainModFileManager : IModFileManager
     {
         /*********
         ** Fields
@@ -71,7 +71,7 @@ namespace StardewModdingAPI.ModBuildConfig.Framework
         /// <param name="modDllName">The name (without extension or path) for the current mod's DLL.</param>
         /// <param name="validateRequiredModFiles">Whether to validate that required mod files like the manifest are present.</param>
         /// <exception cref="UserErrorException">The mod package isn't valid.</exception>
-        public CSharpModManager(string projectDir, string targetDir, string[] ignoreFilePaths, Regex[] ignoreFilePatterns, ExtraAssemblyTypes bundleAssemblyTypes, string modDllName, bool validateRequiredModFiles)
+        public MainModFileManager(string projectDir, string targetDir, string[] ignoreFilePaths, Regex[] ignoreFilePatterns, ExtraAssemblyTypes bundleAssemblyTypes, string modDllName, bool validateRequiredModFiles)
         {
             // validate paths
             if (!Directory.Exists(projectDir))

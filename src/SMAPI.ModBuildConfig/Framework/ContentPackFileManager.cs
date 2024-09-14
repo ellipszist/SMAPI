@@ -13,7 +13,7 @@ using StardewModdingAPI.Toolkit.Utilities;
 namespace StardewModdingAPI.ModBuildConfig.Framework
 {
     /// <summary>Manages the files that are part of a bundled content pack.</summary>
-    internal class ContentPatcherModManager : IModFileManager
+    internal class ContentPackFileManager : IModFileManager
     {
         /*********
         ** Fields
@@ -36,7 +36,7 @@ namespace StardewModdingAPI.ModBuildConfig.Framework
         /// <param name="ignoreFilePatterns">Custom regex patterns matching files to ignore when deploying or zipping the mod.</param>
         /// <param name="validateManifest">Whether to validate that the content pack's manifest is valid.</param>
         /// <exception cref="UserErrorException">The mod package isn't valid.</exception>
-        public ContentPatcherModManager(string projectDir, string contentPackDir, string version, string[] ignoreFilePaths, Regex[] ignoreFilePatterns, bool validateManifest)
+        public ContentPackFileManager(string projectDir, string contentPackDir, string version, string[] ignoreFilePaths, Regex[] ignoreFilePatterns, bool validateManifest)
         {
             // get folders
             DirectoryInfo projectDirInfo = new DirectoryInfo(Path.Combine(projectDir, contentPackDir));

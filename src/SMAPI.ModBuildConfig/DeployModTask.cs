@@ -128,7 +128,7 @@ namespace StardewModdingAPI.ModBuildConfig
 
                 var modPackages = new Dictionary<string, IModFileManager>
                 {
-                    [this.ModFolderName] = new CSharpModManager(this.ProjectDir, this.TargetDir, ignoreFilePaths, ignoreFilePatterns, bundleAssemblyTypes, this.ModDllName, validateRequiredModFiles: this.EnableModDeploy || this.EnableModZip)
+                    [this.ModFolderName] = new MainModFileManager(this.ProjectDir, this.TargetDir, ignoreFilePaths, ignoreFilePatterns, bundleAssemblyTypes, this.ModDllName, validateRequiredModFiles: this.EnableModDeploy || this.EnableModZip)
                 };
 
                 if (this.ContentPacks != null)
@@ -158,7 +158,7 @@ namespace StardewModdingAPI.ModBuildConfig
                         this.Log.LogMessage(MessageImportance.High, $"[mod build package] Bundling content pack: {folderName} v{version} at {contentPath}.");
                         modPackages.Add(
                             folderName,
-                            new ContentPatcherModManager(this.ProjectDir, contentPath, version, ignoreFilePaths, ignoreFilePatterns, validateManifest)
+                            new ContentPackFileManager(this.ProjectDir, contentPath, version, ignoreFilePaths, ignoreFilePatterns, validateManifest)
                         );
                     }
                 }
