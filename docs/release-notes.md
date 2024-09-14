@@ -18,6 +18,7 @@
     * Fixed `list_items` & `player_add` listing some flooring & wallpaper items twice.
     * Fixed `show_data_files` & `show_game_files` no longer working correctly (thanks to jakerosado!).
   * Fixed some mod overlays mispositioned when your UI scale is non-100% and zoom level is 100%.
+  * Fixed incorrect 'direct console access' warnings.
   * Updated mod compatibility list.
 
 * For mod authors:

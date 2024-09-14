@@ -417,7 +417,7 @@ namespace StardewModdingAPI.Framework.Logging
                 );
 
                 // direct console access
-                this.LogModWarningGroup(modsWithWarnings, ModWarning.UsesUnvalidatedUpdateTick, LogLevel.Trace, "Direct console access",
+                this.LogModWarningGroup(modsWithWarnings, ModWarning.AccessesConsole, LogLevel.Trace, "Direct console access",
                     "These mods access the SMAPI console window directly. This is more fragile, and their output may not",
                     "be logged by SMAPI."
                 );
