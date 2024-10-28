@@ -33,6 +33,7 @@
   * The SMAPI log now includes the assembly version of each loaded mod (thanks to spacechase0!).
   * Fixed `content.Load` ignoring language override in recent versions.
   * Fixed player sprites and building paint masks not always propagated on change.
+  * Fixed various edge cases when chaining methods on `Translation` instances.
 
 * For the update check server:
   * Rewrote update checks for mods on CurseForge and ModDrop to use new export API endpoints.  

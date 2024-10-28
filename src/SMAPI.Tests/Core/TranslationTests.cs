@@ -126,7 +126,7 @@ namespace SMAPI.Tests.Core
             Translation translation = new("pt-BR", "key", text);
 
             // assert
-            if (translation.HasValue())
+            if (!string.IsNullOrEmpty(text))
                 translation.ToString().Should().Be(text, "the translation should match the valid input");
             else
                 translation.ToString().Should().Be(this.GetPlaceholderText("key"), "the translation should match the placeholder given a null or empty input");
@@ -139,7 +139,7 @@ namespace SMAPI.Tests.Core
             Translation translation = new("pt-BR", "key", text);
 
             // assert
-            if (translation.HasValue())
+            if (!string.IsNullOrEmpty(text))
                 ((string?)translation).Should().Be(text, "the translation should match the valid input");
             else
                 ((string?)translation).Should().Be(this.GetPlaceholderText("key"), "the translation should match the placeholder given a null or empty input");
@@ -152,7 +152,7 @@ namespace SMAPI.Tests.Core
             Translation translation = new Translation("pt-BR", "key", text).UsePlaceholder(value);
 
             // assert
-            if (translation.HasValue())
+            if (!string.IsNullOrEmpty(text))
                 translation.ToString().Should().Be(text, "the translation should match the valid input");
             else if (!value)
                 translation.ToString().Should().Be(text, "the translation should return the text as-is given a null or empty input with the placeholder disabled");
