@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using StardewValley;
 
 namespace StardewModdingAPI
 {
@@ -15,6 +16,10 @@ namespace StardewModdingAPI
         *********/
         /// <summary>The placeholder text when the translation is <c>null</c> or empty, where <c>{0}</c> is the translation key.</summary>
         internal const string PlaceholderText = "(no translation:{0})";
+
+        /// <summary>The gender to use for gender switch blocks.</summary>
+        /// <remarks>This enables formatting translations in unit tests; most code should leave this null to get it from <see cref="Game1.player"/> instead.</remarks>
+        internal Func<Gender>? ForceGender { get; init; }
 
         /// <summary>The locale for which the translation was fetched like <c>fr-FR</c>, or an empty string for English.</summary>
         private readonly string Locale;
@@ -69,6 +74,7 @@ namespace StardewModdingAPI
             this.Placeholder = other.Placeholder;
             this.ShouldUsePlaceholder = other.ShouldUsePlaceholder;
             this.TokenValues = other.TokenValues;
+            this.ForceGender = other.ForceGender;
         }
 
         /// <summary>Replace the text if it's <c>null</c> or empty. If you set a <c>null</c> or empty value, the translation will show the fallback "no translation" placeholder (see <see cref="UsePlaceholder"/> if you want to disable that).</summary>
@@ -171,15 +177,23 @@ namespace StardewModdingAPI
         [return: NotNullIfNotNull("text")]
         private string? FormatText(string? text)
         {
-            if (this.TokenValues?.Count > 0 && !string.IsNullOrWhiteSpace(text))
+            if (!string.IsNullOrWhiteSpace(text))
             {
-                text = Regex.Replace(text, @"{{([ \w\.\-]+)}}", match =>
+                // apply tokens
+                if (this.TokenValues?.Count > 0)
                 {
-                    string key = match.Groups[1].Value.Trim();
-                    return this.TokenValues.TryGetValue(key, out string? value)
-                        ? (value ?? "")
-                        : match.Value;
-                });
+                    text = Regex.Replace(text, @"{{([ \w\.\-]+)}}", match =>
+                    {
+                        string key = match.Groups[1].Value.Trim();
+                        return this.TokenValues.TryGetValue(key, out string? value)
+                            ? (value ?? "")
+                            : match.Value;
+                    });
+                }
+
+                // apply gender switches
+                Gender gender = this.ForceGender?.Invoke() ?? Game1.player?.Gender ?? default;
+                text = Dialogue.applyGenderSwitchBlocks(gender, text);
             }
 
             return text;

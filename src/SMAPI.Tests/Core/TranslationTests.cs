@@ -145,6 +145,22 @@ namespace SMAPI.Tests.Core
                 ((string?)translation).Should().Be(this.GetPlaceholderText("key"), "the translation should match the placeholder given a null or empty input");
         }
 
+        [Test(Description = "Assert that the translation returns the expected text for a translation containing gender switch blocks.")]
+        [TestCase("Hello ${lad^lass^there}$ on this fine ${male¦female¦other}$ day.", Gender.Male, ExpectedResult = "Hello lad on this fine male day.")]
+        [TestCase("Hello ${lad^lass^there}$ on this fine ${male¦female¦other}$ day.", Gender.Female, ExpectedResult = "Hello lass on this fine female day.")]
+        [TestCase("Hello ${lad^lass^there}$ on this fine ${male¦female¦other}$ day.", Gender.Undefined, ExpectedResult = "Hello there on this fine other day.")]
+        public string Translation_WithGenderSwitchBlocks(string text, Gender gender)
+        {
+            // arrange
+            Translation translation = new("pt-BR", "key", text)
+            {
+                ForceGender = () => gender
+            };
+
+            // assert
+            return translation.ToString();
+        }
+
         [Test(Description = "Assert that the translation returns the expected text given a use-placeholder setting.")]
         public void Translation_UsePlaceholder([Values(true, false)] bool value, [ValueSource(nameof(TranslationTests.Samples))] string? text)
         {
@@ -183,6 +199,23 @@ namespace SMAPI.Tests.Core
 
             // assert
             translation.ToString().Should().Be("The token value is some value.");
+        }
+
+        [Test(Description = "Assert that the translation returns the expected text after setting the default to a value containing gender switch blocks.")]
+        [TestCase("Hello ${lad^lass^there}$ on this fine ${male¦female¦other}$ day.", Gender.Male, ExpectedResult = "Hello lad on this fine male day.")]
+        [TestCase("Hello ${lad^lass^there}$ on this fine ${male¦female¦other}$ day.", Gender.Female, ExpectedResult = "Hello lass on this fine female day.")]
+        [TestCase("Hello ${lad^lass^there}$ on this fine ${male¦female¦other}$ day.", Gender.Undefined, ExpectedResult = "Hello there on this fine other day.")]
+        public string Translation_Default_WithGenderSwitchBlocks(string placeholder, Gender gender)
+        {
+            // arrange
+            Translation translation = new("pt-BR", "key", null)
+            {
+                ForceGender = () => gender
+            };
+            translation = translation.Default(placeholder);
+
+            // assert
+            return translation.ToString();
         }
 
         /****
