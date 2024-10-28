@@ -175,6 +175,16 @@ namespace SMAPI.Tests.Core
                 translation.ToString().Should().Be(this.GetPlaceholderText("key"), translation.ToString(), "the translation should match the placeholder, given a null or empty base text and no default text");
         }
 
+        [Test(Description = "Assert that the translation returns the expected text after setting the default to a value containing tokens.")]
+        public void Translation_Default_WithTokens()
+        {
+            // act
+            Translation translation = new Translation("pt-BR", "key", null).Default("The {{token}} is {{value}}.").Tokens(new { token = "token value", value = "some value" });
+
+            // assert
+            translation.ToString().Should().Be("The token value is some value.");
+        }
+
         /****
         ** Translation tokens
         ****/

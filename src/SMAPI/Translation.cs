@@ -140,9 +140,11 @@ namespace StardewModdingAPI
         {
             if (!this.Cached)
             {
-                string? rawText = this.ShouldUsePlaceholder && !this.HasValue()
-                    ? this.Placeholder
-                    : this.FormatText(this.Text);
+                string? rawText = this.FormatText(
+                    this.ShouldUsePlaceholder && !this.HasValue()
+                        ? this.Placeholder
+                        : this.Text
+                );
 
                 this.CachedResult = rawText;
                 this.Cached = true;
