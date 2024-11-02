@@ -36,6 +36,7 @@
   * The SMAPI log now includes the assembly version of each loaded mod (thanks to spacechase0!).
   * Fixed `content.Load` ignoring language override in recent versions.
   * Fixed player sprites and building paint masks not always propagated on change.
+  * Fixed `.tmx` map tile sizes being premultiplied, which is inconsistent with the game's `.tbin` maps.
   * Fixed various edge cases when chaining methods on `Translation` instances.
 
 * For the update check server:
