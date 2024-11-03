@@ -53,58 +53,6 @@ public class NetFieldAnalyzerTests : DiagnosticVerifier
         this.VerifyCSharpDiagnostic(test);
     }
 
-    /// <summary>Test that the expected diagnostic message is raised for implicit net field comparisons.</summary>
-    /// <param name="codeText">The code line to test.</param>
-    /// <param name="column">The column within the code line where the diagnostic message should be reported.</param>
-    /// <param name="expression">The expression which should be reported.</param>
-    /// <param name="fromType">The source type name which should be reported.</param>
-    /// <param name="toType">The target type name which should be reported.</param>
-    [TestCase("Item item = null; if (item.netIntField < 42);", 22, "item.netIntField", "NetInt", "int")] // ↓ implicit conversion
-    [TestCase("Item item = null; if (item.netIntField <= 42);", 22, "item.netIntField", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntField > 42);", 22, "item.netIntField", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntField >= 42);", 22, "item.netIntField", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntField == 42);", 22, "item.netIntField", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntField != 42);", 22, "item.netIntField", "NetInt", "int")]
-    [TestCase("Item item = null; if (item?.netIntField != 42);", 22, "item?.netIntField", "NetInt", "int")]
-    [TestCase("Item item = null; if (item?.netIntField != null);", 22, "item?.netIntField", "NetInt", "object")]
-    [TestCase("Item item = null; if (item.netIntProperty < 42);", 22, "item.netIntProperty", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntProperty <= 42);", 22, "item.netIntProperty", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntProperty > 42);", 22, "item.netIntProperty", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntProperty >= 42);", 22, "item.netIntProperty", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntProperty == 42);", 22, "item.netIntProperty", "NetInt", "int")]
-    [TestCase("Item item = null; if (item.netIntProperty != 42);", 22, "item.netIntProperty", "NetInt", "int")]
-    [TestCase("Item item = null; if (item?.netIntProperty != 42);", 22, "item?.netIntProperty", "NetInt", "int")]
-    [TestCase("Item item = null; if (item?.netIntProperty != null);", 22, "item?.netIntProperty", "NetInt", "object")]
-    [TestCase("Item item = null; if (item.netRefField == null);", 22, "item.netRefField", "NetRef", "object")]
-    [TestCase("Item item = null; if (item.netRefField != null);", 22, "item.netRefField", "NetRef", "object")]
-    [TestCase("Item item = null; if (item.netRefProperty == null);", 22, "item.netRefProperty", "NetRef", "object")]
-    [TestCase("Item item = null; if (item.netRefProperty != null);", 22, "item.netRefProperty", "NetRef", "object")]
-    [TestCase("SObject obj = null; if (obj.netIntField != 42);", 24, "obj.netIntField", "NetInt", "int")] // ↓ implicit conversion for parent field
-    [TestCase("SObject obj = null; if (obj.netIntProperty != 42);", 24, "obj.netIntProperty", "NetInt", "int")]
-    [TestCase("SObject obj = null; if (obj.netRefField == null);", 24, "obj.netRefField", "NetRef", "object")]
-    [TestCase("SObject obj = null; if (obj.netRefField != null);", 24, "obj.netRefField", "NetRef", "object")]
-    [TestCase("SObject obj = null; if (obj.netRefProperty == null);", 24, "obj.netRefProperty", "NetRef", "object")]
-    [TestCase("SObject obj = null; if (obj.netRefProperty != null);", 24, "obj.netRefProperty", "NetRef", "object")]
-    [TestCase("Item item = new Item(); object list = item.netList;", 38, "item.netList", "NetList", "object")] // ↓ NetList field converted to a non-interface type
-    [TestCase("Item item = new Item(); object list = item.netCollection;", 38, "item.netCollection", "NetCollection", "object")]
-    [TestCase("Item item = new Item(); int x = (int)item.netIntField;", 32, "item.netIntField", "NetFieldBase", "int")] // ↓ explicit conversion to invalid type
-    [TestCase("Item item = new Item(); int x = item.netRefField as object;", 32, "item.netRefField", "NetRef", "object")]
-    public void AvoidImplicitNetFieldComparisons_RaisesDiagnostic(string codeText, int column, string expression, string fromType, string toType)
-    {
-        // arrange
-        string code = NetFieldAnalyzerTests.SampleProgram.Replace("{{test-code}}", codeText);
-        DiagnosticResult expected = new()
-        {
-            Id = "AvoidImplicitNetFieldCast",
-            Message = $"This implicitly converts '{expression}' from {fromType} to {toType}, but {fromType} has unintuitive implicit conversion rules. Consider comparing against the actual value instead to avoid bugs. See https://smapi.io/package/avoid-implicit-net-field-cast for details.",
-            Severity = DiagnosticSeverity.Warning,
-            Locations = new[] { new DiagnosticResultLocation("Test0.cs", NetFieldAnalyzerTests.SampleCodeLine, NetFieldAnalyzerTests.SampleCodeColumn + column) }
-        };
-
-        // assert
-        this.VerifyCSharpDiagnostic(code, expected);
-    }
-
     /// <summary>Test that the net field analyzer doesn't raise any warnings for safe member access.</summary>
     /// <param name="codeText">The code line to test.</param>
     [TestCase("Item item = new Item(); System.Collections.IEnumerable list = farmer.eventsSeen;")]

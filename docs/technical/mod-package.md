@@ -192,44 +192,11 @@ if needed using the warning ID (shown under 'code' in the Error List).
 
 See below for help with specific warnings.
 
-### Avoid implicit net field cast
-Warning text:
-> This implicitly converts '{{expression}}' from {{net type}} to {{other type}}, but
-> {{net type}} has unintuitive implicit conversion rules. Consider comparing against the actual
-> value instead to avoid bugs.
-
-Stardew Valley uses net types (like `NetBool` and `NetInt`) to handle multiplayer sync. These types
-can implicitly convert to their equivalent normal values (like `bool x = new NetBool()`), but their
-conversion rules are unintuitive and error-prone. For example,
-`item?.category == null && item?.category != null` can both be true at once, and
-`building.indoors != null` can be true for a null value.
-
-Suggested fix:
-* Some net fields have an equivalent non-net property like `monster.Health` (`int`) instead of
-  `monster.health` (`NetInt`). The package will add a separate [AvoidNetField](#avoid-net-field) warning for
-  these. Use the suggested property instead.
-* For a reference type (i.e. one that can contain `null`), you can use the `.Value` property:
-  ```c#
-  if (building.indoors.Value == null)
-  ```
-  Or convert the value before comparison:
-  ```c#
-  GameLocation indoors = building.indoors;
-  if(indoors == null)
-     // ...
-  ```
-* For a value type (i.e. one that can't contain `null`), check if the object is null (if applicable)
-  and compare with `.Value`:
-  ```cs
-  if (item != null && item.category.Value == 0)
-  ```
-
 ### Avoid net field
 Warning text:
 > '{{expression}}' is a {{net type}} field; consider using the {{property name}} property instead.
 
-Your code accesses a net field, which has some unusual behavior (see [AvoidImplicitNetFieldCast](#avoid-implicit-net-field-cast)).
-This field has an equivalent non-net property that avoids those issues.
+Your code accesses a net field, but the game has an equivalent non-net property.
 
 Suggested fix: access the suggested property name instead.
 
