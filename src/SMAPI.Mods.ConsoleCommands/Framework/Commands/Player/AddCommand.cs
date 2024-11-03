@@ -166,20 +166,23 @@ internal class AddCommand : ConsoleCommand
     /// <summary>Get the command description.</summary>
     private static string GetDescription()
     {
-        return "Gives the player an item.\n"
-            + "\n"
-            + "Usage: player_add <item id> [count] [quality]\n"
-            + "- item id: the item ID (use the 'list_items' command to see a list).\n"
-            + "- count (optional): how many of the item to give.\n"
-            + $"- quality (optional): one of {Object.lowQuality} (normal), {Object.medQuality} (silver), {Object.highQuality} (gold), or {Object.bestQuality} (iridium).\n"
-            + "\n"
-            + "Usage: player_add name \"<item name>\" [count] [quality]\n"
-            + "- item name: the item name to search (use the 'list_items' command to see a list). This will add the item immediately if it's an exact match, else show a table of matching items.\n"
-            + "- count (optional): how many of the item to give.\n"
-            + $"- quality (optional): one of {Object.lowQuality} (normal), {Object.medQuality} (silver), {Object.highQuality} (gold), or {Object.bestQuality} (iridium).\n"
-            + "\n"
-            + "These examples both add the galaxy sword to your inventory:\n"
-            + "  player_add weapon 4\n"
-            + "  player_add name \"Galaxy Sword\"";
+        return
+            $"""
+            Gives the player an item.
+
+            Usage: player_add <item id> [count] [quality]
+            - item id: the item ID (use the 'list_items' command to see a list).
+            - count (optional): how many of the item to give.
+            - quality (optional): one of {Object.lowQuality} (normal), {Object.medQuality} (silver), {Object.highQuality} (gold), or {Object.bestQuality} (iridium).
+
+            Usage: player_add name "<item name>" [count] [quality]
+            - item name: the item name to search (use the 'list_items' command to see a list). This will add the item immediately if it's an exact match, else show a table of matching items.
+            - count (optional): how many of the item to give.
+            - quality (optional): one of {Object.lowQuality} (normal), {Object.medQuality} (silver), {Object.highQuality} (gold), or {Object.bestQuality} (iridium).
+
+            These examples both add the galaxy sword to your inventory:
+              player_add weapon 4
+              player_add name "Galaxy Sword"
+            """;
     }
 }

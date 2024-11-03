@@ -15,8 +15,12 @@ internal class HurryAllCommand : ConsoleCommand
     public HurryAllCommand()
         : base(
             name: "hurry_all",
-            description: "Immediately warps all NPCs to their scheduled positions. (To hurry a single NPC, use `debug hurry npc-name` instead.)\n\n"
-                         + "Usage: hurry_all"
+            description:
+                """
+                Immediately warps all NPCs to their scheduled positions. (To hurry a single NPC, use `debug hurry npc-name` instead.)
+
+                Usage: hurry_all
+                """
         )
     { }
 

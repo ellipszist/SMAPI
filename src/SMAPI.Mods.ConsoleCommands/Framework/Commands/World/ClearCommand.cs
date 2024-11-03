@@ -30,10 +30,14 @@ internal class ClearCommand : ConsoleCommand
     public ClearCommand()
         : base(
             name: "world_clear",
-            description: "Clears in-game entities in a given location.\n\n"
-                + "Usage: world_clear <location> <object type>\n"
-                + " - location: the location name for which to clear objects (like Farm), or 'current' for the current location.\n"
-                + " - object type: the type of object clear. You can specify 'crops', 'debris' (stones/twigs/weeds and dead crops), 'furniture', 'grass', and 'trees' / 'fruit-trees'. You can also specify 'removable' (remove everything that can be removed or destroyed during normal gameplay) or 'everything' (remove everything including permanent bushes)."
+            description:
+                """
+                Clears in-game entities in a given location.
+
+                Usage: world_clear <location> <object type>
+                 - location: the location name for which to clear objects (like Farm), or 'current' for the current location.
+                 - object type: the type of object clear. You can specify 'crops', 'debris' (stones/twigs/weeds and dead crops), 'furniture', 'grass', and 'trees' / 'fruit-trees'. You can also specify 'removable' (remove everything that can be removed or destroyed during normal gameplay) or 'everything' (remove everything including permanent bushes).
+                """
         )
     { }
 
