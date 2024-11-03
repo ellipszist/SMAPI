@@ -1,9 +1,8 @@
-namespace StardewModdingAPI
+namespace StardewModdingAPI;
+
+/// <summary>The game framework running the game.</summary>
+public enum GameFramework
 {
-    /// <summary>The game framework running the game.</summary>
-    public enum GameFramework
-    {
-        /// <summary>The MonoGame framework.</summary>
-        MonoGame
-    }
+    /// <summary>The MonoGame framework.</summary>
+    MonoGame
 }
