@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{86C452BE
 		..\.editorconfig = ..\.editorconfig
 		..\.gitattributes = ..\.gitattributes
 		..\.gitignore = ..\.gitignore
+		Directory.Packages.props = Directory.Packages.props
 		..\LICENSE.txt = ..\LICENSE.txt
 	EndProjectSection
 EndProject

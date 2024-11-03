@@ -26,14 +26,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.10.4" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-
-    <!--
-      This is imported through Microsoft.Build.Utilities.Core. When installed by a mod, NuGet
-      otherwise imports version 4.3.0 instead of 5.0.0, which conflicts with SMAPI's version.
-    -->
-    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" />
+    <PackageReference Include="Microsoft.Win32.Registry" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>
