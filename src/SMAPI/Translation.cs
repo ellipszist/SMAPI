@@ -33,6 +33,9 @@ public class Translation
     /// <summary>Whether to use <see cref="Placeholder"/> if the translation is <c>null</c> or empty.</summary>
     private bool ShouldUsePlaceholder { get; init; }
 
+    /// <summary>Whether to process gender-switch blocks in translation text, if any.</summary>
+    private bool ShouldApplyGenderSwitchBlocks { get; init; }
+
     /// <summary>The tokens to apply to the translation text, if any.</summary>
     private Dictionary<string, string?>? TokenValues { get; init; }
 
@@ -64,6 +67,7 @@ public class Translation
         this.Text = text;
         this.Placeholder = string.Format(Translation.PlaceholderText, key);
         this.ShouldUsePlaceholder = true;
+        this.ShouldApplyGenderSwitchBlocks = true;
     }
 
     /// <summary>Construct an instance.</summary>
@@ -73,6 +77,7 @@ public class Translation
     {
         this.Placeholder = other.Placeholder;
         this.ShouldUsePlaceholder = other.ShouldUsePlaceholder;
+        this.ShouldApplyGenderSwitchBlocks = other.ShouldApplyGenderSwitchBlocks;
         this.TokenValues = other.TokenValues;
         this.ForceGender = other.ForceGender;
     }
@@ -106,6 +111,20 @@ public class Translation
         return new Translation(this)
         {
             ShouldUsePlaceholder = use
+        };
+    }
+
+    /// <summary>Whether to automatically process gender-switch blocks (i.e. <see cref="Dialogue.applyGenderSwitchBlocks"/>) before the text is returned.</summary>
+    /// <param name="apply">Whether to process gender-switch blocks.</param>
+    /// <remarks>Returns a new instance if this would change the result, else the current instance.</remarks>
+    public Translation ApplyGenderSwitchBlocks(bool apply)
+    {
+        if (this.ShouldApplyGenderSwitchBlocks == apply)
+            return this;
+
+        return new Translation(this)
+        {
+            ShouldApplyGenderSwitchBlocks = apply
         };
     }
 
