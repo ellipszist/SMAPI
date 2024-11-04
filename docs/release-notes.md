@@ -1,6 +1,9 @@
 ← [README](README.md)
 
 # Release notes
+## Upcoming release
+* Fixed various issues with custom maps loaded from `.tmx` files in Stardew Valley 1.6.9.
+
 ## 4.1.1
 Released 04 November 2024 for Stardew Valley 1.6.9 or later.
 
