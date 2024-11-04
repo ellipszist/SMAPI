@@ -157,8 +157,10 @@ internal class SGame : Game1
         //
         // It's not clear why that happens, but there's little reason not to just using the buffer consistently and
         // avoid the issue.
+        if (Context.IsWorldReady)
+            return true;
 
-        return true;
+        return base.ShouldDrawOnBuffer();
     }
 
     /*********
