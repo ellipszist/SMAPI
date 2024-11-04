@@ -32,7 +32,9 @@
   * Translations now support tokens in their placeholder text.
   * Translations now support [gender switch blocks](https://stardewvalleywiki.com/Modding:Dialogue#Gender_switch).
   * SMAPI no longer blocks map edits which change the tilesheet order, since that no longer causes crashes in Stardew Valley 1.6.9.
-  * Updated dependencies, including [FluentHttpClient](https://github.com/Pathoschild/FluentHttpClient#readme) 4.3.0 → 4.4.0 (see [changes](https://github.com/Pathoschild/FluentHttpClient/blob/develop/RELEASE-NOTES.md#440)) and [Pintail](https://github.com/Nanoray-pl/Pintail) 2.3.0 → 2.4.2 (see [changes](https://github.com/Nanoray-pl/Pintail/blob/master/docs/release-notes.md#242)).
+  * Updated dependencies, including...
+    * [FluentHttpClient](https://github.com/Pathoschild/FluentHttpClient#readme) 4.3.0 → 4.4.1 (see [changes](https://github.com/Pathoschild/FluentHttpClient/blob/develop/RELEASE-NOTES.md#441));
+    * [Pintail](https://github.com/Nanoray-pl/Pintail) 2.3.0 → 2.6.0 (see [changes](https://github.com/Nanoray-pl/Pintail/blob/master/docs/release-notes.md#260)).
   * The SMAPI log now includes the assembly version of each loaded mod (thanks to spacechase0!).
   * Fixed `content.Load` ignoring language override in recent versions.
   * Fixed player sprites and building paint masks not always propagated on change.
