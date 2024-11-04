@@ -49,7 +49,7 @@ internal static class EarlyConstants
     internal static int? LogScreenId { get; set; }
 
     /// <summary>SMAPI's current raw semantic version.</summary>
-    internal static string RawApiVersion = "4.0.8";
+    internal static string RawApiVersion = "4.1.0";
 }
 
 /// <summary>Contains SMAPI's constants and assumptions.</summary>
@@ -68,7 +68,7 @@ public static class Constants
     public static ISemanticVersion MinimumGameVersion { get; } = new GameVersion("1.6.9");
 
     /// <summary>The minimum supported Stardew Valley build number, or <c>null</c> for any build of <see cref="MinimumGameVersion"/>.</summary>
-    public static int? MinimumGameBuild { get; } = 24292;
+    public static int? MinimumGameBuild { get; } = 24308;
 
     /// <summary>The maximum supported version of Stardew Valley, if any.</summary>
     public static ISemanticVersion? MaximumGameVersion { get; } = null;
@@ -175,7 +175,47 @@ public static class Constants
         // Nonstandard versions are normalized by GameVersion (e.g. 1.07 => 1.0.7).
         switch (version.ToString())
         {
+            case "1.6.8":
+            case "1.6.7":
+            case "1.6.6":
+            case "1.6.5":
+            case "1.6.4":
+                return new SemanticVersion("4.0.8");
+
+            case "1.6.3":
+            case "1.6.2":
+            case "1.6.1":
+            case "1.6.0":
+                return new SemanticVersion("4.0.6");
+
+            case "1.5.6":
+                return new SemanticVersion("3.18.6");
+
+            case "1.5.5":
+                return new SemanticVersion("3.13.2");
+
+            case "1.5.4":
+                return new SemanticVersion("3.12.8");
+
+            case "1.5.3":
+                return new SemanticVersion("3.8.4");
+
+            case "1.5.2":
+                return new SemanticVersion("3.8.3");
+
+            case "1.5.1":
+                return new SemanticVersion("3.8.2");
+
+            case "1.5.0":
+                return new SemanticVersion("3.8.0");
+
+            case "1.4.5":
+            case "1.4.4":
+            case "1.4.3":
+            case "1.4.2":
             case "1.4.1":
+                return new SemanticVersion("3.7.6");
+
             case "1.4.0":
                 return new SemanticVersion("3.0.1");
 
