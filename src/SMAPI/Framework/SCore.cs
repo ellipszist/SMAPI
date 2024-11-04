@@ -402,7 +402,7 @@ internal class SCore : IDisposable
         }
 
         // init TMX support
-        xTile.Format.FormatManager.Instance.RegisterMapFormat(new TMXTile.TMXFormat(Game1.smallestTileSize, Game1.smallestTileSize));
+        xTile.Format.FormatManager.Instance.RegisterMapFormat(new TMXTile.TMXFormat(Game1.smallestTileSize, Game1.smallestTileSize, 1, 1)); // note: don't omit `1, 1`, TMXTile doesn't default them correctly
 
         // load mod data
         ModToolkit toolkit = new();
