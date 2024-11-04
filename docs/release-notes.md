@@ -1,7 +1,9 @@
 ← [README](README.md)
 
 # Release notes
-## Upcoming release
+## 4.1.1
+Released 04 November 2024 for Stardew Valley 1.6.9 or later.
+
 * Fixed crash when loading saves containing a custom spouse room loaded from a `.tmx` file.
 
 ## 4.1.0
