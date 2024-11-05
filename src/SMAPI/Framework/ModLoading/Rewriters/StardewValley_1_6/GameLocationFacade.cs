@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Netcode;
 using StardewModdingAPI.Framework.ModLoading.Framework;
@@ -7,6 +8,7 @@ using StardewValley.Audio;
 using StardewValley.Buildings;
 using StardewValley.Extensions;
 using StardewValley.Objects;
+using xTile;
 using xTile.Dimensions;
 
 namespace StardewModdingAPI.Framework.ModLoading.Rewriters.StardewValley_1_6;
@@ -78,6 +80,24 @@ public class GameLocationFacade : GameLocation, IRewriteFacade
     public string GetSeasonForLocation()
     {
         return base.GetSeasonKey();
+    }
+
+    /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+    public int getTileIndexAt(Location p, string layer)
+    {
+        return base.getTileIndexAt(p, layer);
+    }
+
+    /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+    public int getTileIndexAt(Point p, string layer)
+    {
+        return base.getTileIndexAt(p.X, p.Y, layer);
+    }
+
+    /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+    public int getTileIndexAt(int x, int y, string layer)
+    {
+        return base.getTileIndexAt(x, y, layer);
     }
 
     /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
@@ -183,6 +203,30 @@ public class GameLocationFacade : GameLocation, IRewriteFacade
         base.removeLightSource(identifier.ToString());
     }
 
+    /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+    public void setAnimatedMapTile(int tileX, int tileY, int[] animationTileIndexes, long interval, string layer, string action, int whichTileSheet = 0)
+    {
+        if (GameLocationFacade.TryGetTileSheetId(this, whichTileSheet, out string? tilesheetId))
+            base.setAnimatedMapTile(tileX, tileY, animationTileIndexes, interval, layer, tilesheetId, action);
+    }
+
+    /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+    public void setMapTile(int tileX, int tileY, int index, string layer, string action, int whichTileSheet = 0)
+    {
+        if (GameLocationFacade.TryGetTileSheetId(this, whichTileSheet, out string? tilesheetId))
+            base.setMapTile(tileX, tileY, index, layer, tilesheetId, action);
+    }
+
+    /// <remarks>Changed in Stardew Valley 1.6.9.</remarks>
+    public void setMapTileIndex(int tileX, int tileY, int index, string layer, int whichTileSheet = 0)
+    {
+        if (index == -1)
+            base.removeMapTile(tileX, tileY, layer);
+
+        else if (GameLocationFacade.TryGetTileSheetId(this, whichTileSheet, out string? tilesheetId))
+            base.setMapTile(tileX, tileY, index, layer, tilesheetId);
+    }
+
 
     /*********
     ** Private methods
@@ -190,5 +234,24 @@ public class GameLocationFacade : GameLocation, IRewriteFacade
     private GameLocationFacade()
     {
         RewriteHelper.ThrowFakeConstructorCalled();
+    }
+
+    /// <summary>Get the ID for the tilesheet at the given index in this location's <see cref="Map.TileSheets"/>.</summary>
+    /// <param name="location">The location whose tilesheets to search.</param>
+    /// <param name="index">The index to check.</param>
+    /// <param name="id">The ID of the tilesheet, if found.</param>
+    /// <returns>Returns whether the index was within the bounds of the tilesheet list.</returns>
+    private static bool TryGetTileSheetId(GameLocation location, int index, [NotNullWhen(true)] out string? id)
+    {
+        var tilesheets = location.map?.TileSheets;
+
+        if (tilesheets is not null && index >= 0 && index < tilesheets.Count)
+        {
+            id = tilesheets[index].Id;
+            return true;
+        }
+
+        id = null;
+        return false;
     }
 }
