@@ -1,7 +1,9 @@
 &larr; [mod build config](./mod-build-config.md)
 
 ## Release notes
-## Upcoming release
+## 4.3.1
+Released 04 November 2024 for SMAPI 4.1.0 or later.
+
 * Removed build warnings for implicit net field conversions, which were removed in Stardew Valley 1.6.9.
 * Fixed zip structure on Linux/macOS after 4.3.0.
 
