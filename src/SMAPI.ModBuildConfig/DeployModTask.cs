@@ -333,6 +333,9 @@ public class DeployModTask : Task
             foreach (var file in mod.Value.GetFiles())
             {
                 string relativePath = file.Key;
+                if (relativePath.Contains('\\'))
+                    relativePath = string.Join("/", PathUtilities.GetSegments(relativePath)); // zip files use forward slashes regardless of OS
+
                 FileInfo fileInfo = file.Value;
 
                 string archivePath = modPackages.Count == 1

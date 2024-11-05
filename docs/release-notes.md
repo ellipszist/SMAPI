@@ -1,6 +1,11 @@
 ← [README](README.md)
 
 # Release notes
+## 4.1.3
+Released 04 November 2024 for Stardew Valley 1.6.10 or later.
+
+* Improved compatibility rewriters for Stardew Valley 1.6.9+.
+
 ## 4.1.2
 Released 04 November 2024 for Stardew Valley 1.6.10 or later.
 
