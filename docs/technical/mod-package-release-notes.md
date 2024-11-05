@@ -3,6 +3,7 @@
 ## Release notes
 ## Upcoming release
 * Removed build warnings for implicit net field conversions, which were removed in Stardew Valley 1.6.9.
+* Fixed zip structure on Linux/macOS after 4.3.0.
 
 ## 4.3.0
 Released 06 October 2024 for SMAPI 3.13.0 or later.
