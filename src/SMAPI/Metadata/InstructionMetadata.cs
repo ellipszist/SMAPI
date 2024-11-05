@@ -266,12 +266,6 @@ internal class InstructionMetadata
                 .MapFacade<WateringCan, WateringCanFacade>()
                 .MapFacade<WorldDate, WorldDateFacade>()
 
-                // Mono.Cecil seems to have trouble resolving rewritten signatures which include a nested type like `StardewValley.BellsAndWhistles.SpriteText/ScrollTextAlignment`
-                .MapMethod("System.Void StardewValley.BellsAndWhistles.SpriteText::drawString(Microsoft.Xna.Framework.Graphics.SpriteBatch,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Single,System.Single,System.Boolean,System.Int32,System.String,System.Int32,StardewValley.BellsAndWhistles.SpriteText/ScrollTextAlignment)", typeof(SpriteTextFacade), nameof(SpriteTextFacade.drawString))
-                .MapMethod("System.Void StardewValley.BellsAndWhistles.SpriteText::drawStringWithScrollBackground(Microsoft.Xna.Framework.Graphics.SpriteBatch,System.String,System.Int32,System.Int32,System.String,System.Single,System.Int32,StardewValley.BellsAndWhistles.SpriteText/ScrollTextAlignment)", typeof(SpriteTextFacade), nameof(SpriteTextFacade.drawStringWithScrollBackground))
-                .MapMethod("System.Void StardewValley.Projectiles.BasicProjectile::.ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Single,System.Single,System.Single,Microsoft.Xna.Framework.Vector2,System.String,System.String,System.Boolean,System.Boolean,StardewValley.GameLocation,StardewValley.Character,System.Boolean,StardewValley.Projectiles.BasicProjectile/onCollisionBehavior)", typeof(BasicProjectileFacade), nameof(BasicProjectileFacade.Constructor), new[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(float), typeof(float), typeof(float), typeof(Vector2), typeof(string), typeof(string), typeof(bool), typeof(bool), typeof(GameLocation), typeof(Character), typeof(bool), typeof(onCollisionBehavior) })
-                .MapMethod("System.String StardewValley.LocalizedContentManager::LanguageCodeString(StardewValley.LocalizedContentManager/LanguageCode)", typeof(LocalizedContentManagerFacade), nameof(LocalizedContentManager.LanguageCodeString))
-
                 // BuildableGameLocation merged into GameLocation
                 .MapFacade("StardewValley.Locations.BuildableGameLocation", typeof(BuildableGameLocationFacade))
                 .MapField("Netcode.NetCollection`1<StardewValley.Buildings.Building> StardewValley.Locations.BuildableGameLocation::buildings", typeof(GameLocation), nameof(GameLocation.buildings))

@@ -95,7 +95,10 @@ internal static class RewriteHelper
             return $"{type.Namespace}.{type.Name}<{string.Join(",", genericTypes.Select(RewriteHelper.GetFullCecilName))}>";
         }
 
-        return $"{type.Namespace}.{type.Name}";
+        Type? parentType = type.DeclaringType;
+        return parentType != null
+            ? $"{RewriteHelper.GetFullCecilName(parentType)}/{type.Name}"
+            : $"{type.Namespace}.{type.Name}";
     }
 
     /// <summary>Get the resolved type for a Cecil type reference.</summary>
