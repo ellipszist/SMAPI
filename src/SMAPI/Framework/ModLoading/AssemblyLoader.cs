@@ -106,10 +106,9 @@ internal class AssemblyLoader : IDisposable
     /// <param name="mod">The mod for which the assembly is being loaded.</param>
     /// <param name="assemblyFile">The assembly file.</param>
     /// <param name="assumeCompatible">Assume the mod is compatible, even if incompatible code is detected.</param>
-    /// <param name="assemblyLoadContext">The assembly load context with which to load assemblies for the current mod.</param>
     /// <returns>Returns the rewrite metadata for the preprocessed assembly.</returns>
     /// <exception cref="IncompatibleInstructionException">An incompatible CIL instruction was found while rewriting the assembly.</exception>
-    public Assembly Load(IModMetadata mod, FileInfo assemblyFile, bool assumeCompatible, ModAssemblyLoadContext assemblyLoadContext)
+    public Assembly Load(IModMetadata mod, FileInfo assemblyFile, bool assumeCompatible)
     {
         // get referenced local assemblies
         AssemblyParseResult[] assemblies;
@@ -117,24 +116,10 @@ internal class AssemblyLoader : IDisposable
             HashSet<string> visitedAssemblyNames = new( // don't try loading assemblies that are already loaded
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 let name = assembly.GetName().Name
-                where
-                    name != null
-                    && (
-                        !assemblyLoadContext.IsPrivateAssembly(name)
-                        && assemblyLoadContext.IsLoadedPublicAssembly(name)
-                    )
+                where name != null
                 select name
             );
             assemblies = this.GetReferencedLocalAssemblies(assemblyFile, visitedAssemblyNames, this.AssemblyDefinitionResolver).ToArray();
-        }
-
-        // validate private assemblies
-        foreach (IManifestPrivateAssembly entry in mod.Manifest.PrivateAssemblies)
-        {
-            string assemblyName = entry.Name;
-
-            if (!entry.UsedDynamically && assemblies.All(a => a.Definition?.Name.Name != assemblyName))
-                this.Monitor.Log($"      Mod '{mod.DisplayName}' refers to private assembly '{assemblyName}' in its manifest, but doesn't use it. This is a bug that should be reported to that mod's author.", LogLevel.Warn);
         }
 
         // validate load
@@ -174,27 +159,23 @@ internal class AssemblyLoader : IDisposable
             }
 
             // load assembly
-            bool loadAsPrivate = assemblyLoadContext.IsPrivateAssembly(assembly.Definition.Name.Name);
             if (changed)
             {
                 if (!oneAssembly)
-                    this.Monitor.Log($"      Loading{(loadAsPrivate ? " private" : "")} assembly '{assembly.File.Name}' (rewritten)...");
+                    this.Monitor.Log($"      Loading assembly '{assembly.File.Name}' (rewritten)...");
 
                 // load assembly
                 using MemoryStream outAssemblyStream = new();
                 using MemoryStream outSymbolStream = new();
                 assembly.Definition.Write(outAssemblyStream, new WriterParameters { WriteSymbols = true, SymbolStream = outSymbolStream, SymbolWriterProvider = this.SymbolWriterProvider });
-                outAssemblyStream.Position = 0;
-                outSymbolStream.Position = 0;
-                lastAssembly = assemblyLoadContext.LoadFromStream(outAssemblyStream, outSymbolStream);
-                assemblyLoadContext.OnLoadedAssembly(lastAssembly);
+                byte[] bytes = outAssemblyStream.ToArray();
+                lastAssembly = Assembly.Load(bytes, outSymbolStream.ToArray());
             }
             else
             {
                 if (!oneAssembly)
-                    this.Monitor.Log($"      Loading{(loadAsPrivate ? " private" : "")} assembly '{assembly.File.Name}'...");
-                lastAssembly = assemblyLoadContext.LoadFromAssemblyPath(assembly.File.FullName);
-                assemblyLoadContext.OnLoadedAssembly(lastAssembly);
+                    this.Monitor.Log($"      Loading assembly '{assembly.File.Name}'...");
+                lastAssembly = Assembly.UnsafeLoadFrom(assembly.File.FullName);
             }
 
             // track loaded assembly for definition resolution

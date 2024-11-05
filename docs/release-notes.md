@@ -1,21 +1,31 @@
 ← [README](README.md)
 
 # Release notes
+## Upcoming release
+* For players:
+  * Fixed a wide variety of mod errors and crashes after SMAPI 4.1.0 in some specific cases (e.g. Content Patcher "unable to find constructor" errors).
+
+* For mod authors:
+  * Removed the new private assembly references feature. This may be revisited in a future update once the dust settles on 1.6.9.
+
 ## 4.1.3
 Released 04 November 2024 for Stardew Valley 1.6.10 or later.
 
-* Improved compatibility rewriters for Stardew Valley 1.6.9+.
+* For players:
+  * Improved compatibility rewriters for Stardew Valley 1.6.9+.
 
 ## 4.1.2
 Released 04 November 2024 for Stardew Valley 1.6.10 or later.
 
-* Updated for Stardew Valley 1.6.10.
-* Fixed various issues with custom maps loaded from `.tmx` files in Stardew Valley 1.6.9.
+* For players:
+  * Updated for Stardew Valley 1.6.10.
+  * Fixed various issues with custom maps loaded from `.tmx` files in Stardew Valley 1.6.9.
 
 ## 4.1.1
 Released 04 November 2024 for Stardew Valley 1.6.9 or later.
 
-* Fixed crash when loading saves containing a custom spouse room loaded from a `.tmx` file.
+* For players:
+  * Fixed crash when loading saves containing a custom spouse room loaded from a `.tmx` file.
 
 ## 4.1.0
 Released 04 November 2024 for Stardew Valley 1.6.9 or later. See [release highlights](https://www.patreon.com/posts/115304143).
