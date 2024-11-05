@@ -1,7 +1,9 @@
 ← [README](README.md)
 
 # Release notes
-## Upcoming release
+## 4.1.4
+Released 05 November 2024 for Stardew Valley 1.6.10 or later.
+
 * For players:
   * Fixed a wide variety of mod errors and crashes after SMAPI 4.1.0 in some specific cases (e.g. Content Patcher "unable to find constructor" errors).
 
