@@ -7,6 +7,7 @@
 
 * For mod authors:
   * Removed the new private assembly references feature. This may be revisited in a future update once the dust settles on 1.6.9.
+  * Fixed error propagating edits to `Data/ChairTiles`.
 
 ## 4.1.3
 Released 04 November 2024 for Stardew Valley 1.6.10 or later.

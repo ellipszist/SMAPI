@@ -334,7 +334,7 @@ internal class CoreAssetPropagator
                     Utility.ForEachLocation(location =>
                     {
                         if (Context.IsMainPlayer || location.IsTemporary)
-                            this.Reflection.GetField<bool>(location, "__mapSeatsDirty").SetValue(true);
+                            this.Reflection.GetField<bool>(location, "_mapSeatsDirty").SetValue(true);
 
                         return true;
                     });
