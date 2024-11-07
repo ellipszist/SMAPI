@@ -74,10 +74,6 @@
             "ID": "Entoarox.EntoaroxFramework",
             "Default | UpdateKey": "Nexus:2269"
         },
-        "JSON Assets": {
-            "ID": "spacechase0.JsonAssets",
-            "Default | UpdateKey": "Nexus:1720"
-        },
         "Mail Framework": {
             "ID": "DIGUS.MailFrameworkMod",
             "Default | UpdateKey": "Nexus:1536"
@@ -97,10 +93,6 @@
         "Stardust Core": {
             "ID": "Omegasis.StardustCore",
             "Default | UpdateKey": "Nexus:2341"
-        },
-        "TMXL Map Toolkit": {
-            "ID": "Platonymous.TMXLoader",
-            "Default | UpdateKey": "Nexus:1820"
         },
 
         /*********
@@ -146,6 +138,44 @@
             "ID": "Ilyaki.SplitScreen",
             "~ | Status": "Obsolete",
             "~ | StatusReasonPhrase": "split-screen mode was added in Stardew Valley 1.5. You can delete this mod."
+        },
+
+        /*********
+        ** Broke in SDV 1.6.9
+        *********/
+        "Catalogue Indicator": {
+            "ID": "com.anthonyhilyard.CatalogueIndicator",
+            "~1.0.0 | Status": "AssumeBroken",
+            "~1.0.0 | StatusReasonDetails": "ItemStockInformation references crash at runtime"
+        },
+        "Heart Event Helper": {
+            "ID": "bungus.HeartEventHelper",
+            "~1.0.6 | Status": "AssumeBroken",
+            "~1.0.6 | StatusReasonDetails": "breaks question dialogues (e.g. Lewis' start-festival-event question)"
+        },
+        "Json Assets": {
+            "ID": "spacechase0.JsonAssets",
+            "~1.1.18 | Status": "AssumeBroken",
+            "~1.1.18 | StatusReasonDetails": "ItemStockInformation references crash at runtime",
+
+            "Default | UpdateKey": "Nexus:1720"
+        },
+        "Shop Tile Framework": {
+            "ID": "Cherry.ShopTileFramework",
+            "~1.0.10-alpha-20240227 | Status": "AssumeBroken",
+            "~1.0.10-alpha-20240227 | StatusReasonDetails": "ItemStockInformation references crash at runtime"
+        },
+        "Swim (FlyingTNT)": {
+            "ID": "FlyingTNT.Swim",
+            "~1.6.4 | Status": "AssumeBroken",
+            "~1.6.4 | StatusReasonDetails": "Harmony patches fail at runtime"
+        },
+        "TMXL Map Toolkit": {
+            "ID": "Platonymous.TMXLoader",
+            "~1.24.3-alpha.20240226 | Status": "AssumeBroken",
+            "~1.24.3-alpha.20240226 | StatusReasonDetails": "Harmony patches fail at runtime",
+
+            "Default | UpdateKey": "Nexus:1820"
         },
 
         /*********
