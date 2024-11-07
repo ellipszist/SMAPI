@@ -1,6 +1,10 @@
 ← [README](README.md)
 
 # Release notes
+## Upcoming release
+* For mod authors:
+  * Fixed `translation.UsePlaceholder(false)` also disabling custom fallback text, not just the "no translation" placeholder.
+
 ## 4.1.4
 Released 05 November 2024 for Stardew Valley 1.6.10 or later.
 

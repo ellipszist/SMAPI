@@ -27,10 +27,10 @@ public class Translation
     /// <summary>The underlying translation text.</summary>
     private readonly string? Text;
 
-    /// <summary>The value to return if the translations is undefined.</summary>
-    private string? Placeholder { get; init; }
+    /// <summary>The custom value to return if the translations is undefined.</summary>
+    private string? CustomDefault { get; init; }
 
-    /// <summary>Whether to use <see cref="Placeholder"/> if the translation is <c>null</c> or empty.</summary>
+    /// <summary>Whether to show a placeholder if the <see cref="Text"/> and <see cref="CustomDefault"/> are both is <c>null</c> or empty.</summary>
     private bool ShouldUsePlaceholder { get; init; }
 
     /// <summary>Whether to process gender-switch blocks in translation text, if any.</summary>
@@ -65,7 +65,6 @@ public class Translation
         this.Locale = locale;
         this.Key = key;
         this.Text = text;
-        this.Placeholder = string.Format(Translation.PlaceholderText, key);
         this.ShouldUsePlaceholder = true;
         this.ShouldApplyGenderSwitchBlocks = true;
     }
@@ -75,28 +74,27 @@ public class Translation
     internal Translation(Translation other)
         : this(other.Locale, other.Key, other.Text)
     {
-        this.Placeholder = other.Placeholder;
+        this.CustomDefault = other.CustomDefault;
         this.ShouldUsePlaceholder = other.ShouldUsePlaceholder;
         this.ShouldApplyGenderSwitchBlocks = other.ShouldApplyGenderSwitchBlocks;
         this.TokenValues = other.TokenValues;
         this.ForceGender = other.ForceGender;
     }
 
-    /// <summary>Replace the text if it's <c>null</c> or empty. If you set a <c>null</c> or empty value, the translation will show the fallback "no translation" placeholder (see <see cref="UsePlaceholder"/> if you want to disable that).</summary>
+    /// <summary>The custom text to use if the text is <c>null</c> or empty. If set to <c>null</c> or empty value, defaults to a fallback "no translation" placeholder unless you disable that via <see cref="UsePlaceholder"/>.</summary>
     /// <param name="default">The default value.</param>
     /// <remarks>Returns a new instance if this would change the result, else the current instance.</remarks>
     public Translation Default(string? @default)
     {
-        if (this.HasValue())
-            return this;
+        if (string.IsNullOrEmpty(@default))
+            @default = null;
 
-        string placeholder = string.IsNullOrEmpty(@default)
-            ? string.Format(Translation.PlaceholderText, this.Key)
-            : @default;
+        if (this.HasValue() || @default == this.CustomDefault)
+            return this;
 
         return new Translation(this)
         {
-            Placeholder = placeholder
+            CustomDefault = @default
         };
     }
 
@@ -160,18 +158,22 @@ public class Translation
     }
 
     /// <summary>Get the translation text. Calling this method isn't strictly necessary, since you can assign a <see cref="Translation"/> value directly to a string.</summary>
-    /// <remarks><strong>Limitation with nullable reference types: if there's no text and you disabled the fallback via <see cref="UsePlaceholder"/>, this will return null but the return value will still be marked non-nullable.</strong></remarks>
+    /// <remarks><strong>Limitation with nullable reference types: if there's no text, no <see cref="Default"/>, and you disabled the fallback via <see cref="UsePlaceholder"/>, this will return null but the return value will still be marked non-nullable.</strong></remarks>
     public override string ToString()
     {
         if (!this.Cached)
         {
-            string? rawText = this.FormatText(
-                this.ShouldUsePlaceholder && !this.HasValue()
-                    ? this.Placeholder
-                    : this.Text
-            );
+            string? rawText;
+            if (this.HasValue())
+                rawText = this.Text;
+            else if (this.CustomDefault != null)
+                rawText = this.CustomDefault;
+            else if (this.ShouldUsePlaceholder)
+                rawText = string.Format(Translation.PlaceholderText, this.Key);
+            else
+                rawText = null;
 
-            this.CachedResult = rawText;
+            this.CachedResult = this.FormatText(rawText);
             this.Cached = true;
         }
 
