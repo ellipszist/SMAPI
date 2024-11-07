@@ -2,6 +2,9 @@
 
 # Release notes
 ## Upcoming release
+* For players:
+  * Updated mod compatibility list.
+
 * For mod authors:
   * Fixed `translation.UsePlaceholder(false)` also disabling custom fallback text, not just the "no translation" placeholder.
 
