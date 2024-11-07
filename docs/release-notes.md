@@ -1,12 +1,15 @@
 ← [README](README.md)
 
 # Release notes
-## Upcoming release
+## 4.1.5
+Released 07 November 2024 for Stardew Valley 1.6.10 or later.
+
 * For players:
   * Updated mod compatibility list.
+  * Fixed translation issues in some mods with SMAPI 4.1._x_.
 
 * For mod authors:
-  * Fixed `translation.UsePlaceholder(false)` also disabling custom fallback text, not just the "no translation" placeholder.
+  * Fixed `translation.UsePlaceholder(false)` also disabling custom fallback text in recent builds, not just the "no translation" placeholder.
 
 ## 4.1.4
 Released 05 November 2024 for Stardew Valley 1.6.10 or later.
