@@ -4,6 +4,7 @@
 ## Upcoming release
 * For players:
   * Revamped message shown after a game update to avoid confusion, and the window now closes automatically after a few seconds.
+  * Added option to disable content integrity checks in `smapi-internal/config.json`. When disabled, SMAPI will log a warning for visibility when someone helps you troubleshoot game issues.
 
 * For mod authors:
   * Fix `translation.ApplyGenderSwitchBlocks(false)` not applied correctly.
