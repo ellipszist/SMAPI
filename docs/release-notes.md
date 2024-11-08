@@ -1,6 +1,10 @@
 ← [README](README.md)
 
 # Release notes
+## Upcoming release
+* For mod authors:
+  * Fix `translation.ApplyGenderSwitchBlocks(false)` not applied correctly.
+
 ## 4.1.5
 Released 07 November 2024 for Stardew Valley 1.6.10 or later.
 
