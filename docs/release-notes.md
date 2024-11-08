@@ -2,6 +2,9 @@
 
 # Release notes
 ## Upcoming release
+* For players:
+  * Revamped message shown after a game update to avoid confusion, and the window now closes automatically after a few seconds.
+
 * For mod authors:
   * Fix `translation.ApplyGenderSwitchBlocks(false)` not applied correctly.
 
