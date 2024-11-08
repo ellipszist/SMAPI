@@ -1704,6 +1704,12 @@ internal class SCore : IDisposable
     /// <summary>Verify the game's content files and log a warning if any are missing or modified.</summary>
     public void LogContentIntegrityIssues()
     {
+        if (!this.Settings.CheckContentIntegrity)
+        {
+            this.Monitor.Log("You disabled content integrity checks, so you won't be notified if a game content file is missing or corrupted.", LogLevel.Warn);
+            return;
+        }
+
         string contentPath = Constants.ContentPath;
 
         // get file
