@@ -1,6 +1,14 @@
 ← [README](README.md)
 
 # Release notes
+## 4.1.7
+Released 12 November 2024 for Stardew Valley 1.6.14 or later.
+
+* For players:
+  * Updated for Stardew Valley 1.6.14.
+  * Updated mod compatibility list.
+  * Fixed crash if a mod has a missing or invalid DLL.
+
 ## 4.1.6
 Released 07 November 2024 for Stardew Valley 1.6.10 or later.
 

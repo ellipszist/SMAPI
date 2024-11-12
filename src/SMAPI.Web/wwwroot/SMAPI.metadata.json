@@ -148,6 +148,11 @@
             "~1.0.0 | Status": "AssumeBroken",
             "~1.0.0 | StatusReasonDetails": "ItemStockInformation references crash at runtime"
         },
+        "Happy Home Designer": {
+            "ID": "tlitookilakin.HappyHomeDesigner",
+            "~2.1.2 | Status": "AssumeBroken",
+            "~2.1.2 | StatusReasonDetails": "ItemStockInformation references crash at runtime"
+        },
         "Heart Event Helper": {
             "ID": "bungus.HeartEventHelper",
             "~1.0.6 | Status": "AssumeBroken",
@@ -159,6 +164,16 @@
             "~1.1.18 | StatusReasonDetails": "ItemStockInformation references crash at runtime",
 
             "Default | UpdateKey": "Nexus:1720"
+        },
+        "Lunar Disturbances": {
+            "ID": "KoihimeNakamura.LunarDisturbances",
+            "~1.5.3 | Status": "AssumeBroken",
+            "~1.5.3 | StatusReasonDetails": "ItemStockInformation references crash at runtime"
+        },
+        "Searchable Chests": {
+            "ID": "ThisIsCad.SearchableChests",
+            "~1.2.0 | Status": "AssumeBroken",
+            "~1.2.0 | StatusReasonDetails": "ItemStockInformation references crash at runtime"
         },
         "Shop Tile Framework": {
             "ID": "Cherry.ShopTileFramework",
