@@ -16,6 +16,9 @@ public static class PathUtilities
     /// <summary>The root prefix for a Windows UNC path.</summary>
     private const string WindowsUncRoot = @"\\";
 
+    /// <summary>The regex characters that are allowed in a 'slug' that can be used in many different contexts, formatted for use in a <c>[]</c> regex character class.</summary>
+    private const string SlugCharacterClass = @"\p{L}\d\-_\."; // Unicode 'letter' character, digit, dash, underscore, or period
+
 
     /*********
     ** Accessors
@@ -176,6 +179,19 @@ public static class PathUtilities
             && PathUtilities.GetSegments(path).All(segment => segment.Trim() != "..");
     }
 
+    /// <summary>Create a 'slug' containing only basic characters that are safe in all contexts (e.g. filenames, URLs, etc).</summary>
+    /// <param name="input">The string to represent.</param>
+    [Pure]
+#if NET6_0_OR_GREATER
+    [return: NotNullIfNotNull("input")]
+#endif
+    public static string? CreateSlug(string? input)
+    {
+        return string.IsNullOrWhiteSpace(input)
+            ? input
+            : Regex.Replace(input, "[^" + PathUtilities.SlugCharacterClass + "]+", "-").TrimStart('-');
+    }
+
     /// <summary>Get whether a string is a valid 'slug', containing only basic characters that are safe in all contexts (e.g. filenames, URLs, etc).</summary>
     /// <param name="str">The string to check.</param>
     [Pure]
@@ -183,6 +199,6 @@ public static class PathUtilities
     {
         return
             string.IsNullOrWhiteSpace(str)
-            || !Regex.IsMatch(str, "[^a-z0-9_.-]", RegexOptions.IgnoreCase);
+            || !Regex.IsMatch(str, "[^+" + PathUtilities.SlugCharacterClass + "]", RegexOptions.IgnoreCase);
     }
 }

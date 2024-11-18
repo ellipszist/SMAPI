@@ -1,6 +1,12 @@
 ← [README](README.md)
 
 # Release notes
+## Upcoming release
+* For mod authors:
+  * Added `PathUtilities.CreateSlug` to turn an arbitrary string into a safe 'slug' that can be used in special contexts like URLs and file paths.  
+    _For example, `PathUtilities.CreateSlug("some 例子?!/\\~ text")` becomes `"some-例子-text"`._
+  * `PathUtilities.IsSlug` is now less strict and allows more Unicode characters.
+
 ## 4.1.7
 Released 12 November 2024 for Stardew Valley 1.6.14 or later.
 
