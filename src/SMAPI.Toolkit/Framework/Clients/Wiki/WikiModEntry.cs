@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using StardewModdingAPI.Toolkit.Framework.UpdateData;
 
 namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
@@ -49,15 +48,6 @@ public class WikiModEntry
     /// <summary>The mod's compatibility with the latest stable version of the game.</summary>
     public WikiCompatibilityInfo Compatibility { get; }
 
-    /// <summary>The mod's compatibility with the latest beta version of the game (if any).</summary>
-    public WikiCompatibilityInfo? BetaCompatibility { get; }
-
-    /// <summary>Whether a Stardew Valley or SMAPI beta which affects mod compatibility is in progress. If this is true, <see cref="BetaCompatibility"/> should be used for beta versions of SMAPI instead of <see cref="Compatibility"/>.</summary>
-#if NET6_0_OR_GREATER
-    [MemberNotNullWhen(true, nameof(WikiModEntry.BetaCompatibility))]
-#endif
-    public bool HasBetaInfo => this.BetaCompatibility != null;
-
     /// <summary>The human-readable warnings for players about this mod.</summary>
     public string[] Warnings { get; }
 
@@ -91,13 +81,12 @@ public class WikiModEntry
     /// <param name="customUrl">The custom mod page URL (if applicable).</param>
     /// <param name="contentPackFor">The name of the mod which loads this content pack, if applicable.</param>
     /// <param name="compatibility">The mod's compatibility with the latest stable version of the game.</param>
-    /// <param name="betaCompatibility">The mod's compatibility with the latest beta version of the game (if any).</param>
     /// <param name="warnings">The human-readable warnings for players about this mod.</param>
     /// <param name="pullRequestUrl">The URL of the pull request which submits changes for an unofficial update to the author, if any.</param>
     /// <param name="devNote">Special notes intended for developers who maintain unofficial updates or submit pull requests.</param>
     /// <param name="overrides">The data overrides to apply to the mod's manifest or remote mod page data, if any.</param>
     /// <param name="anchor">The link anchor for the mod entry in the wiki compatibility list.</param>
-    public WikiModEntry(string[] id, string[] name, string[] author, int? nexusId, int? chucklefishId, int? curseForgeId, string? curseForgeKey, int? modDropId, string? githubRepo, string? customSourceUrl, string? customUrl, string? contentPackFor, WikiCompatibilityInfo compatibility, WikiCompatibilityInfo? betaCompatibility, string[] warnings, string? pullRequestUrl, string? devNote, WikiDataOverrideEntry? overrides, string? anchor)
+    public WikiModEntry(string[] id, string[] name, string[] author, int? nexusId, int? chucklefishId, int? curseForgeId, string? curseForgeKey, int? modDropId, string? githubRepo, string? customSourceUrl, string? customUrl, string? contentPackFor, WikiCompatibilityInfo compatibility, string[] warnings, string? pullRequestUrl, string? devNote, WikiDataOverrideEntry? overrides, string? anchor)
     {
         this.ID = id;
         this.Name = name;
@@ -112,7 +101,6 @@ public class WikiModEntry
         this.CustomUrl = customUrl;
         this.ContentPackFor = contentPackFor;
         this.Compatibility = compatibility;
-        this.BetaCompatibility = betaCompatibility;
         this.Warnings = warnings;
         this.PullRequestUrl = pullRequestUrl;
         this.DevNote = devNote;

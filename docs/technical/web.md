@@ -228,10 +228,9 @@ The mod ID you specified in the request.
 <td>
 
 The update version recommended by the web API, if any. This is based on some internal rules (e.g.
-it won't recommend a prerelease update if the player has a working stable version) and context
-(e.g. whether the player is in the game beta channel). Choosing an update version yourself isn't
-recommended, but you can set `includeExtendedMetadata: true` and check the `metadata` field if you
-really want to do that.
+it won't recommend a prerelease update if the player has a working stable version). Choosing an
+update version yourself isn't recommended, but you can set `includeExtendedMetadata: true` and
+check the `metadata` field if you really want to do that.
 
 </td>
 </tr>
@@ -268,12 +267,9 @@ field | summary
 `main` | The primary mod version, if any. This depends on the mod site, but it's typically either the version of the mod itself or of its latest non-optional download.
 `optional` | The latest optional download version, if any.
 `unofficial` | The version of the unofficial update defined on the wiki for this mod, if any.
-`unofficialForBeta` | Equivalent to `unofficial`, but for beta versions of SMAPI or Stardew Valley.
-`hasBetaInfo` | Whether there's an ongoing Stardew Valley or SMAPI beta which may affect update checks.
 `compatibilityStatus` | The compatibility status for the mod for the stable version of the game, as defined on the wiki, if any. See [possible values](https://github.com/Pathoschild/SMAPI/blob/develop/src/SMAPI.Toolkit/Framework/Clients/Wiki/WikiCompatibilityStatus.cs).
 `compatibilitySummary` | The human-readable summary of the mod's compatibility in HTML format, if any.
 `brokeIn` | The SMAPI or Stardew Valley version that broke this mod, if any.
-`betaCompatibilityStatus`<br />`betaCompatibilitySummary`<br />`betaBrokeIn` | Equivalent to the preceding fields, but for beta versions of SMAPI or Stardew Valley.
 
 </td>
 </tr>
@@ -314,7 +310,6 @@ Example response with `includeExtendedMetadata: true`:
             "version": "1.10",
             "url": "https://www.nexusmods.com/stardewvalley/mods/1915"
          },
-         "hasBetaInfo": true,
          "compatibilityStatus": "Ok",
          "compatibilitySummary": "✓ use latest version."
       },
@@ -389,8 +384,7 @@ Initial setup:
    property name                   | description
    ------------------------------- | -----------------
    `BackgroundServices:Enabled`    | Set to `true` to enable background processes like fetching data from the wiki, or false to disable them.
-   `Site:BetaEnabled`              | Set to `true` to show a separate download button if there's a beta version of SMAPI in its GitHub releases.
-   `Site:BetaBlurb`                | If `Site:BetaEnabled` is true and there's a beta version of SMAPI in its GitHub releases, this is shown on the beta download button as explanatory subtext.
+   `Site:OtherBlurb`               | A message to show below the download button (e.g. for details on downloading a beta version), in Markdown format.
    `Site:SupporterList`            | A list of Patreon supports to credit on the download page.
 
 To deploy updates, just [redeploy the web project from Visual Studio](https://docs.microsoft.com/en-us/visualstudio/deployment/quickstart-deploy-to-azure).

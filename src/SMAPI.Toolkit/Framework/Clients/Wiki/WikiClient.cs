@@ -50,12 +50,6 @@ public class WikiClient : IDisposable
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
 
-        // fetch game versions
-        string? stableVersion = doc.DocumentNode.SelectSingleNode("//div[@class='game-stable-version']")?.InnerText;
-        string? betaVersion = doc.DocumentNode.SelectSingleNode("//div[@class='game-beta-version']")?.InnerText;
-        if (betaVersion == stableVersion)
-            betaVersion = null;
-
         // parse mod data overrides
         Dictionary<string, WikiDataOverrideEntry> overrides = new Dictionary<string, WikiDataOverrideEntry>(StringComparer.OrdinalIgnoreCase);
         {
@@ -83,11 +77,7 @@ public class WikiClient : IDisposable
         }
 
         // build model
-        return new WikiModList(
-            stableVersion: stableVersion,
-            betaVersion: betaVersion,
-            mods: mods
-        );
+        return new WikiModList(mods);
     }
 
     /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
@@ -134,22 +124,6 @@ public class WikiClient : IDisposable
                 summary: this.GetInnerHtml(node, "mod-summary")?.Trim()
             );
 
-            // parse beta compatibility
-            WikiCompatibilityInfo? betaCompatibility = null;
-            {
-                WikiCompatibilityStatus? betaStatus = this.GetAttributeAsEnum<WikiCompatibilityStatus>(node, "data-beta-status");
-                if (betaStatus.HasValue)
-                {
-                    betaCompatibility = new WikiCompatibilityInfo(
-                        status: betaStatus.Value,
-                        brokeIn: this.GetAttribute(node, "data-beta-broke-in"),
-                        unofficialVersion: this.GetAttributeAsSemanticVersion(node, "data-beta-unofficial-version"),
-                        unofficialUrl: this.GetAttribute(node, "data-beta-unofficial-url"),
-                        summary: this.GetInnerHtml(node, "mod-beta-summary")
-                    );
-                }
-            }
-
             // find data overrides
             WikiDataOverrideEntry? overrides = ids
                 .Select(id => overridesById.TryGetValue(id, out overrides) ? overrides : null)
@@ -170,7 +144,6 @@ public class WikiClient : IDisposable
                 customUrl: customUrl,
                 contentPackFor: contentPackFor,
                 compatibility: compatibility,
-                betaCompatibility: betaCompatibility,
                 warnings: warnings,
                 pullRequestUrl: pullRequestUrl,
                 devNote: devNote,

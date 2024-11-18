@@ -54,12 +54,10 @@ internal class ModsController : Controller
     {
         // fetch cached data
         if (!this.Cache.TryGetWikiMetadata(out Cached<WikiMetadata>? metadata))
-            return new ModListModel(null, null, Array.Empty<ModModel>(), lastUpdated: DateTimeOffset.UtcNow, isStale: true);
+            return new ModListModel(Array.Empty<ModModel>(), lastUpdated: DateTimeOffset.UtcNow, isStale: true);
 
         // build model
         return new ModListModel(
-            stableVersion: metadata.Data.StableVersion,
-            betaVersion: metadata.Data.BetaVersion,
             mods: this.Cache
                 .GetWikiMods()
                 .Select(mod => new ModModel(mod.Data))

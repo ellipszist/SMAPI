@@ -42,12 +42,10 @@ internal class WikiCacheMemoryRepository : BaseCacheRepository, IWikiCacheReposi
     }
 
     /// <summary>Save data fetched from the wiki compatibility list.</summary>
-    /// <param name="stableVersion">The current stable Stardew Valley version.</param>
-    /// <param name="betaVersion">The current beta Stardew Valley version.</param>
     /// <param name="mods">The mod data.</param>
-    public void SaveWikiData(string? stableVersion, string? betaVersion, IEnumerable<WikiModEntry> mods)
+    public void SaveWikiData(IEnumerable<WikiModEntry> mods)
     {
-        this.Metadata = new Cached<WikiMetadata>(new WikiMetadata(stableVersion, betaVersion));
+        this.Metadata = new Cached<WikiMetadata>(new WikiMetadata());
         this.Mods = mods.Select(mod => new Cached<WikiModEntry>(mod)).ToArray();
     }
 }

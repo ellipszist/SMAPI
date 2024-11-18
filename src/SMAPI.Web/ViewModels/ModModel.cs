@@ -33,9 +33,6 @@ public class ModModel
     /// <summary>The compatibility status for the stable version of the game.</summary>
     public ModCompatibilityModel Compatibility { get; }
 
-    /// <summary>The compatibility status for the beta version of the game.</summary>
-    public ModCompatibilityModel? BetaCompatibility { get; }
-
     /// <summary>Links to the available mod pages.</summary>
     public ModLinkModel[] ModPages { get; }
 
@@ -66,14 +63,13 @@ public class ModModel
     /// <param name="gitHubRepo">The GitHub repo, if any.</param>
     /// <param name="sourceUrl">The URL to the mod's source code, if any.</param>
     /// <param name="compatibility">The compatibility status for the stable version of the game.</param>
-    /// <param name="betaCompatibility">The compatibility status for the beta version of the game.</param>
     /// <param name="modPages">Links to the available mod pages.</param>
     /// <param name="warnings">The human-readable warnings for players about this mod.</param>
     /// <param name="pullRequestUrl">The URL of the pull request which submits changes for an unofficial update to the author, if any.</param>
     /// <param name="devNote">Special notes intended for developers who maintain unofficial updates or submit pull requests.</param>
     /// <param name="slug">A unique identifier for the mod that can be used in an anchor URL.</param>
     [JsonConstructor]
-    public ModModel(string? name, string alternateNames, string author, string alternateAuthors, string gitHubRepo, string sourceUrl, ModCompatibilityModel compatibility, ModCompatibilityModel betaCompatibility, ModLinkModel[] modPages, string[] warnings, string pullRequestUrl, string devNote, string slug)
+    public ModModel(string? name, string alternateNames, string author, string alternateAuthors, string gitHubRepo, string sourceUrl, ModCompatibilityModel compatibility, ModLinkModel[] modPages, string[] warnings, string pullRequestUrl, string devNote, string slug)
     {
         this.Name = name;
         this.AlternateNames = alternateNames;
@@ -82,7 +78,6 @@ public class ModModel
         this.GitHubRepo = gitHubRepo;
         this.SourceUrl = sourceUrl;
         this.Compatibility = compatibility;
-        this.BetaCompatibility = betaCompatibility;
         this.ModPages = modPages;
         this.Warnings = warnings;
         this.PullRequestUrl = pullRequestUrl;
@@ -102,7 +97,6 @@ public class ModModel
         this.GitHubRepo = entry.GitHubRepo;
         this.SourceUrl = this.GetSourceUrl(entry);
         this.Compatibility = new ModCompatibilityModel(entry.Compatibility);
-        this.BetaCompatibility = entry.BetaCompatibility != null ? new ModCompatibilityModel(entry.BetaCompatibility) : null;
         this.ModPages = this.GetModPageUrls(entry).ToArray();
         this.Warnings = entry.Warnings;
         this.PullRequestUrl = entry.PullRequestUrl;

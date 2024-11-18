@@ -20,8 +20,6 @@ internal interface IWikiCacheRepository : ICacheRepository
     IEnumerable<Cached<WikiModEntry>> GetWikiMods(Func<WikiModEntry, bool>? filter = null);
 
     /// <summary>Save data fetched from the wiki compatibility list.</summary>
-    /// <param name="stableVersion">The current stable Stardew Valley version.</param>
-    /// <param name="betaVersion">The current beta Stardew Valley version.</param>
     /// <param name="mods">The mod data.</param>
-    void SaveWikiData(string? stableVersion, string? betaVersion, IEnumerable<WikiModEntry> mods);
+    void SaveWikiData(IEnumerable<WikiModEntry> mods);
 }

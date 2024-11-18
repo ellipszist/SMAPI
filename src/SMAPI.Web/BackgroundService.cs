@@ -196,7 +196,7 @@ internal class BackgroundService : IHostedService, IDisposable
         WikiModList wikiCompatList = await new ModToolkit().GetWikiCompatibilityListAsync();
 
         context.WriteLine("Saving data...");
-        BackgroundService.WikiCache.SaveWikiData(wikiCompatList.StableVersion, wikiCompatList.BetaVersion, wikiCompatList.Mods);
+        BackgroundService.WikiCache.SaveWikiData(wikiCompatList.Mods);
 
         context.WriteLine("Done!");
     }

@@ -56,9 +56,6 @@ public class ModExtendedMetadataModel
     /// <summary>The latest unofficial version, if newer than <see cref="Main"/> and <see cref="Optional"/>.</summary>
     public ModEntryVersionModel? Unofficial { get; set; }
 
-    /// <summary>The latest unofficial version for the current Stardew Valley or SMAPI beta, if any.</summary>
-    public ModEntryVersionModel? UnofficialForBeta { get; set; }
-
     /****
     ** Stable compatibility
     ****/
@@ -71,19 +68,6 @@ public class ModExtendedMetadataModel
 
     /// <summary>The game or SMAPI version which broke this mod, if applicable.</summary>
     public string? BrokeIn { get; set; }
-
-    /****
-    ** Beta compatibility
-    ****/
-    /// <summary>The compatibility status for the Stardew Valley beta (if any).</summary>
-    [JsonConverter(typeof(StringEnumConverter))]
-    public WikiCompatibilityStatus? BetaCompatibilityStatus { get; set; }
-
-    /// <summary>The human-readable summary of the compatibility status or workaround for the Stardew Valley beta (if any), without HTML formatting.</summary>
-    public string? BetaCompatibilitySummary { get; set; }
-
-    /// <summary>The beta game or SMAPI version which broke this mod, if applicable.</summary>
-    public string? BetaBrokeIn { get; set; }
 
     /****
     ** Version mappings
@@ -110,14 +94,12 @@ public class ModExtendedMetadataModel
     /// <param name="main">The main version.</param>
     /// <param name="optional">The latest optional version, if newer than <paramref name="main"/>.</param>
     /// <param name="unofficial">The latest unofficial version, if newer than <paramref name="main"/> and <paramref name="optional"/>.</param>
-    /// <param name="unofficialForBeta">The latest unofficial version for the current Stardew Valley or SMAPI beta, if any.</param>
-    public ModExtendedMetadataModel(WikiModEntry? wiki, ModDataRecord? db, ModEntryVersionModel? main, ModEntryVersionModel? optional, ModEntryVersionModel? unofficial, ModEntryVersionModel? unofficialForBeta)
+    public ModExtendedMetadataModel(WikiModEntry? wiki, ModDataRecord? db, ModEntryVersionModel? main, ModEntryVersionModel? optional, ModEntryVersionModel? unofficial)
     {
         // versions
         this.Main = main;
         this.Optional = optional;
         this.Unofficial = unofficial;
-        this.UnofficialForBeta = unofficialForBeta;
 
         // wiki data
         if (wiki != null)
@@ -136,10 +118,6 @@ public class ModExtendedMetadataModel
             this.CompatibilityStatus = wiki.Compatibility.Status;
             this.CompatibilitySummary = wiki.Compatibility.Summary;
             this.BrokeIn = wiki.Compatibility.BrokeIn;
-
-            this.BetaCompatibilityStatus = wiki.BetaCompatibility?.Status;
-            this.BetaCompatibilitySummary = wiki.BetaCompatibility?.Summary;
-            this.BetaBrokeIn = wiki.BetaCompatibility?.BrokeIn;
 
             this.ChangeLocalVersions = wiki.Overrides?.ChangeLocalVersions?.ToString();
             this.ChangeRemoteVersions = wiki.Overrides?.ChangeRemoteVersions?.ToString();

@@ -155,7 +155,6 @@ internal class ModsApiController : Controller
         ModEntryVersionModel? main = null;
         ModEntryVersionModel? optional = null;
         ModEntryVersionModel? unofficial = null;
-        ModEntryVersionModel? unofficialForBeta = null;
         foreach (UpdateKey updateKey in updateKeys)
         {
             // validate update key
@@ -197,22 +196,6 @@ internal class ModsApiController : Controller
         if (wikiEntry?.Compatibility.UnofficialVersion != null && this.IsNewer(wikiEntry.Compatibility.UnofficialVersion, main?.Version) && this.IsNewer(wikiEntry.Compatibility.UnofficialVersion, optional?.Version))
             unofficial = new ModEntryVersionModel(wikiEntry.Compatibility.UnofficialVersion, $"{this.Url.PlainAction("Index", "Mods", absoluteUrl: true)}#{wikiEntry.Anchor}");
 
-        // get unofficial version for beta
-        if (wikiEntry is { HasBetaInfo: true })
-        {
-            if (wikiEntry.BetaCompatibility.Status == WikiCompatibilityStatus.Unofficial)
-            {
-                if (wikiEntry.BetaCompatibility.UnofficialVersion != null)
-                {
-                    unofficialForBeta = (wikiEntry.BetaCompatibility.UnofficialVersion != null && this.IsNewer(wikiEntry.BetaCompatibility.UnofficialVersion, main?.Version) && this.IsNewer(wikiEntry.BetaCompatibility.UnofficialVersion, optional?.Version))
-                        ? new ModEntryVersionModel(wikiEntry.BetaCompatibility.UnofficialVersion, $"{this.Url.PlainAction("Index", "Mods", absoluteUrl: true)}#{wikiEntry.Anchor}")
-                        : null;
-                }
-                else
-                    unofficialForBeta = unofficial;
-            }
-        }
-
         // fallback to preview if latest is invalid
         if (main == null && optional != null)
         {
@@ -241,8 +224,6 @@ internal class ModsApiController : Controller
                 updates.Add(optional);
             if (this.IsRecommendedUpdate(installedVersion, unofficial?.Version, useBetaChannel: true))
                 updates.Add(unofficial);
-            if (this.IsRecommendedUpdate(installedVersion, unofficialForBeta?.Version, useBetaChannel: apiVersion.IsPrerelease()))
-                updates.Add(unofficialForBeta);
 
             // get newest version
             ModEntryVersionModel? newest = null;
@@ -260,7 +241,7 @@ internal class ModsApiController : Controller
 
         // add extended metadata
         if (includeExtendedMetadata)
-            result.Metadata = new ModExtendedMetadataModel(wikiEntry, record, main: main, optional: optional, unofficial: unofficial, unofficialForBeta: unofficialForBeta);
+            result.Metadata = new ModExtendedMetadataModel(wikiEntry, record, main: main, optional: optional, unofficial: unofficial);
 
         // add result
         result.Errors = errors.ToArray();
