@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using StardewModdingAPI.Toolkit.Framework.UpdateData;
 
-namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo;
 
 /// <summary>A mod entry in the compatibility list.</summary>
 public class ModCompatibilityEntry

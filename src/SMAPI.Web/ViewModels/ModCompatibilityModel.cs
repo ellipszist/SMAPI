@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
+using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo;
 
 namespace StardewModdingAPI.Web.ViewModels;
 

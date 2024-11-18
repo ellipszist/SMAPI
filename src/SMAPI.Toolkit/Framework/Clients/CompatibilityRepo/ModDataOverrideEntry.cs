@@ -1,6 +1,6 @@
 using System;
 
-namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo;
 
 /// <summary>The data overrides to apply to matching mods.</summary>
 public class ModDataOverrideEntry

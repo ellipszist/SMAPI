@@ -1,4 +1,4 @@
-namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki.Internal.DataModels;
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal.DataModels;
 
 /// <summary>As part of <see cref="RawModEntry"/>, a data override to apply to the mod's manifest or remote mod page data.</summary>
 internal class RawModDataOverride

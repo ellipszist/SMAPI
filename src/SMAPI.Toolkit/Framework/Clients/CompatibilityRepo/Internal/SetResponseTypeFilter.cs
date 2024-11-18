@@ -2,7 +2,7 @@ using System.Net.Http.Headers;
 using Pathoschild.Http.Client;
 using Pathoschild.Http.Client.Extensibility;
 
-namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki.Internal;
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal;
 
 /// <summary>An HTTP filter which sets the content type for all responses received to <c>text/json</c>.</summary>
 internal class ForceJsonResponseTypeFilter : IHttpFilter

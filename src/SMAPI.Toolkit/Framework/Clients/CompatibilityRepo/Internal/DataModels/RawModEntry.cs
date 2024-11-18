@@ -1,4 +1,4 @@
-namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki.Internal.DataModels;
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal.DataModels;
 
 /// <summary>The compatibility metadata for a mod in the raw data.</summary>
 internal class RawModEntry

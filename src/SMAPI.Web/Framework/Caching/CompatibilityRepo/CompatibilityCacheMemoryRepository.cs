@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
+using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo;
 
-namespace StardewModdingAPI.Web.Framework.Caching.Wiki;
+namespace StardewModdingAPI.Web.Framework.Caching.CompatibilityRepo;
 
 /// <summary>Manages cached compatibility list data in-memory.</summary>
 internal class CompatibilityCacheMemoryRepository : BaseCacheRepository, ICompatibilityCacheRepository

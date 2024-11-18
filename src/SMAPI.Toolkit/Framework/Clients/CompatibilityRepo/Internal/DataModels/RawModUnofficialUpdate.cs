@@ -1,4 +1,4 @@
-namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki.Internal.DataModels;
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal.DataModels;
 
 /// <summary>As part of <see cref="RawModEntry"/>, an unofficial update which fixes compatibility with the latest Stardew Valley and SMAPI versions.</summary>
 internal class RawModUnofficialUpdate

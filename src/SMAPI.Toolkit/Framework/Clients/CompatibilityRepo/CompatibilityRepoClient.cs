@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Markdig;
 using Pathoschild.Http.Client;
-using StardewModdingAPI.Toolkit.Framework.Clients.Wiki.Internal;
-using StardewModdingAPI.Toolkit.Framework.Clients.Wiki.Internal.DataModels;
+using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal;
+using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal.DataModels;
 using StardewModdingAPI.Toolkit.Framework.MarkdownExtensions;
 using StardewModdingAPI.Toolkit.Utilities;
 
-namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo;
 
 /// <summary>An HTTP client for fetching data from the mod compatibility repo.</summary>
 public class CompatibilityRepoClient : IDisposable
