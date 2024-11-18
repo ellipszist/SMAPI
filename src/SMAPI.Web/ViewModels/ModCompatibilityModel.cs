@@ -41,12 +41,12 @@ public class ModCompatibilityModel
 
     /// <summary>Construct an instance.</summary>
     /// <param name="info">The mod metadata.</param>
-    public ModCompatibilityModel(WikiCompatibilityInfo info)
+    public ModCompatibilityModel(ModCompatibilityInfo info)
     {
         this.Status = info.Status.ToString();
         this.Status = this.Status.Substring(0, 1).ToLower() + this.Status.Substring(1);
 
-        this.Summary = info.Summary;
+        this.Summary = info.HtmlSummary ?? info.Summary;
         this.BrokeIn = info.BrokeIn;
         if (info.UnofficialVersion != null)
             this.UnofficialVersion = new ModLinkModel(info.UnofficialUrl!, info.UnofficialVersion.ToString());

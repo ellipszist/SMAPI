@@ -86,10 +86,10 @@ internal class Startup
 
         // init storage
         services.AddSingleton<IModCacheRepository>(new ModCacheMemoryRepository());
+        services.AddSingleton<ICompatibilityCacheRepository>(new CompatibilityCacheMemoryRepository());
         services.AddSingleton<ICurseForgeExportCacheRepository>(new CurseForgeExportCacheMemoryRepository());
         services.AddSingleton<IModDropExportCacheRepository>(new ModDropExportCacheMemoryRepository());
         services.AddSingleton<INexusExportCacheRepository>(new NexusExportCacheMemoryRepository());
-        services.AddSingleton<IWikiCacheRepository>(new WikiCacheMemoryRepository());
 
         // init Hangfire
         services

@@ -29,14 +29,14 @@ else
 {
     @if (Model.IsStale)
     {
-        <div class="error">Showing data from @staleAge.Humanize(maxUnit: TimeUnit.Hour, minUnit: TimeUnit.Minute) ago. (Couldn't fetch newer data; the wiki API may be offline.)</div>
+        <div class="error">Showing data from @staleAge.Humanize(maxUnit: TimeUnit.Hour, minUnit: TimeUnit.Minute) ago. (Couldn't fetch newer data; the GitHub API may be offline.)</div>
     }
 
     <div id="app">
         <div id="intro">
-            <p>This page shows all known SMAPI mods and (incompatible) content packs, whether they work with the latest versions of Stardew Valley and SMAPI, and how to fix them if not. If a mod doesn't work after following the instructions below, check <a href="https://stardewvalleywiki.com/Modding:Player_Guide/Troubleshooting">the troubleshooting guide</a> or <a href="https://stardewvalleywiki.com/Modding:Player_Guide/Troubleshooting#Ask_for_help">ask for help</a>.</p>
+            <p>This page shows all known SMAPI mods and (incompatible) content packs, whether they work with the latest versions of Stardew Valley and SMAPI, and how to fix them if not. If a mod doesn't work after following the instructions below, check <a href="https://stardewvalleywiki.com/Modding:Player_Guide/Troubleshooting">the troubleshooting guide</a> or <a href="https://stardewvalleywiki.com/Modding:Help">ask for help</a>.</p>
 
-            <p>The list is updated every few days (you can help <a href="https://stardewvalleywiki.com/Modding:Mod_compatibility">update it</a>!). It doesn't include XNB mods (see <a href="https://stardewvalleywiki.com/Modding:Using_XNB_mods"><em>using XNB mods</em> on the wiki</a> instead) or compatible content packs.</p>
+            <p>The list is updated regularly (<a href="https://github.com/Pathoschild/SmapiCompatibilityList#readme">you can help update it</a>!). It doesn't include XNB mods (see <a href="https://stardewvalleywiki.com/Modding:Using_XNB_mods"><em>using XNB mods</em> on the wiki</a> instead) or compatible content packs.</p>
         </div>
 
         <div id="options">

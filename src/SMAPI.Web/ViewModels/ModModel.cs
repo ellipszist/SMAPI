@@ -82,7 +82,7 @@ public class ModModel
 
     /// <summary>Construct an instance.</summary>
     /// <param name="entry">The mod metadata.</param>
-    public ModModel(WikiModEntry entry)
+    public ModModel(ModCompatibilityEntry entry)
     {
         // basic info
         this.Name = entry.Name.FirstOrDefault();
@@ -104,7 +104,7 @@ public class ModModel
     *********/
     /// <summary>Get the web URL for the mod's source code repository, if any.</summary>
     /// <param name="entry">The mod metadata.</param>
-    private string? GetSourceUrl(WikiModEntry entry)
+    private string? GetSourceUrl(ModCompatibilityEntry entry)
     {
         if (!string.IsNullOrWhiteSpace(entry.GitHubRepo))
             return $"https://github.com/{entry.GitHubRepo}";
@@ -115,7 +115,7 @@ public class ModModel
 
     /// <summary>Get the web URLs for the mod pages, if any.</summary>
     /// <param name="entry">The mod metadata.</param>
-    private IEnumerable<ModLinkModel> GetModPageUrls(WikiModEntry entry)
+    private IEnumerable<ModLinkModel> GetModPageUrls(ModCompatibilityEntry entry)
     {
         foreach ((ModSiteKey modSite, string url) in entry.GetModPageUrls())
         {

@@ -5,21 +5,21 @@ using StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
 
 namespace StardewModdingAPI.Web.Framework.Caching.Wiki;
 
-/// <summary>Manages cached wiki data.</summary>
-internal interface IWikiCacheRepository : ICacheRepository
+/// <summary>Manages cached compatibility list data.</summary>
+internal interface ICompatibilityCacheRepository : ICacheRepository
 {
     /*********
     ** Methods
     *********/
-    /// <summary>Get the cached wiki metadata.</summary>
+    /// <summary>Get the cache metadata.</summary>
     /// <param name="metadata">The fetched metadata.</param>
-    bool TryGetWikiMetadata([NotNullWhen(true)] out Cached<WikiMetadata>? metadata);
+    bool TryGetCacheMetadata([NotNullWhen(true)] out Cached<CompatibilityListMetadata>? metadata);
 
-    /// <summary>Get the cached wiki mods.</summary>
+    /// <summary>Get the cached compatibility list.</summary>
     /// <param name="filter">A filter to apply, if any.</param>
-    IEnumerable<Cached<WikiModEntry>> GetWikiMods(Func<WikiModEntry, bool>? filter = null);
+    IEnumerable<Cached<ModCompatibilityEntry>> GetMods(Func<ModCompatibilityEntry, bool>? filter = null);
 
-    /// <summary>Save data fetched from the wiki compatibility list.</summary>
+    /// <summary>Save data fetched from the compatibility list.</summary>
     /// <param name="mods">The mod data.</param>
-    void SaveWikiData(IEnumerable<WikiModEntry> mods);
+    void SaveData(IEnumerable<ModCompatibilityEntry> mods);
 }

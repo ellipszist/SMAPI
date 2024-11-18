@@ -3,8 +3,8 @@ using StardewModdingAPI.Toolkit.Framework.UpdateData;
 
 namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
 
-/// <summary>A mod entry in the wiki list.</summary>
-public class WikiModEntry
+/// <summary>A mod entry in the compatibility list.</summary>
+public class ModCompatibilityEntry
 {
     /*********
     ** Accessors
@@ -43,7 +43,7 @@ public class WikiModEntry
     public string? ContentPackFor { get; }
 
     /// <summary>The mod's compatibility with the latest stable version of the game.</summary>
-    public WikiCompatibilityInfo Compatibility { get; }
+    public ModCompatibilityInfo Compatibility { get; }
 
     /// <summary>The human-readable warnings for players about this mod.</summary>
     public string[] Warnings { get; }
@@ -52,9 +52,9 @@ public class WikiModEntry
     public string? DevNote { get; }
 
     /// <summary>The data overrides to apply to the mod's manifest or remote mod page data, if any.</summary>
-    public WikiDataOverrideEntry? Overrides { get; }
+    public ModDataOverrideEntry? Overrides { get; }
 
-    /// <summary>The link anchor for the mod entry in the wiki compatibility list.</summary>
+    /// <summary>The link anchor for the mod entry in the compatibility list.</summary>
     public string? Anchor { get; }
 
 
@@ -77,8 +77,8 @@ public class WikiModEntry
     /// <param name="warnings">The human-readable warnings for players about this mod.</param>
     /// <param name="devNote">Special notes intended for developers who maintain unofficial updates or submit pull requests.</param>
     /// <param name="overrides">The data overrides to apply to the mod's manifest or remote mod page data, if any.</param>
-    /// <param name="anchor">The link anchor for the mod entry in the wiki compatibility list.</param>
-    public WikiModEntry(string[] id, string[] name, string[] author, int? nexusId, int? chucklefishId, int? curseForgeId, int? modDropId, string? githubRepo, string? customSourceUrl, string? customUrl, string? contentPackFor, WikiCompatibilityInfo compatibility, string[] warnings, string? devNote, WikiDataOverrideEntry? overrides, string? anchor)
+    /// <param name="anchor">The link anchor for the mod entry in the compatibility list.</param>
+    public ModCompatibilityEntry(string[] id, string[] name, string[] author, int? nexusId, int? chucklefishId, int? curseForgeId, int? modDropId, string? githubRepo, string? customSourceUrl, string? customUrl, string? contentPackFor, ModCompatibilityInfo compatibility, string[] warnings, string? devNote, ModDataOverrideEntry? overrides, string? anchor)
     {
         this.ID = id;
         this.Name = name;

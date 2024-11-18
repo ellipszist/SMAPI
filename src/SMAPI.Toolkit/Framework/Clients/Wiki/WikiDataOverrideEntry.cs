@@ -3,7 +3,7 @@ using System;
 namespace StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
 
 /// <summary>The data overrides to apply to matching mods.</summary>
-public class WikiDataOverrideEntry
+public class ModDataOverrideEntry
 {
     /*********
     ** Accessors

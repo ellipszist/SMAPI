@@ -6,33 +6,31 @@ using StardewModdingAPI.Toolkit.Framework.Clients.Wiki;
 
 namespace StardewModdingAPI.Web.Framework.Caching.Wiki;
 
-/// <summary>Manages cached wiki data in-memory.</summary>
-internal class WikiCacheMemoryRepository : BaseCacheRepository, IWikiCacheRepository
+/// <summary>Manages cached compatibility list data in-memory.</summary>
+internal class CompatibilityCacheMemoryRepository : BaseCacheRepository, ICompatibilityCacheRepository
 {
     /*********
     ** Fields
     *********/
-    /// <summary>The saved wiki metadata.</summary>
-    private Cached<WikiMetadata>? Metadata;
+    /// <summary>The saved compatibility list metadata.</summary>
+    private Cached<CompatibilityListMetadata>? Metadata;
 
-    /// <summary>The cached wiki data.</summary>
-    private Cached<WikiModEntry>[] Mods = Array.Empty<Cached<WikiModEntry>>();
+    /// <summary>The cached compatibility list.</summary>
+    private Cached<ModCompatibilityEntry>[] Mods = [];
 
 
     /*********
     ** Public methods
     *********/
-    /// <summary>Get the cached wiki metadata.</summary>
-    /// <param name="metadata">The fetched metadata.</param>
-    public bool TryGetWikiMetadata([NotNullWhen(true)] out Cached<WikiMetadata>? metadata)
+    /// <inheritdoc />
+    public bool TryGetCacheMetadata([NotNullWhen(true)] out Cached<CompatibilityListMetadata>? metadata)
     {
         metadata = this.Metadata;
         return metadata != null;
     }
 
-    /// <summary>Get the cached wiki mods.</summary>
-    /// <param name="filter">A filter to apply, if any.</param>
-    public IEnumerable<Cached<WikiModEntry>> GetWikiMods(Func<WikiModEntry, bool>? filter = null)
+    /// <inheritdoc />
+    public IEnumerable<Cached<ModCompatibilityEntry>> GetMods(Func<ModCompatibilityEntry, bool>? filter = null)
     {
         foreach (var mod in this.Mods)
         {
@@ -41,11 +39,10 @@ internal class WikiCacheMemoryRepository : BaseCacheRepository, IWikiCacheReposi
         }
     }
 
-    /// <summary>Save data fetched from the wiki compatibility list.</summary>
-    /// <param name="mods">The mod data.</param>
-    public void SaveWikiData(IEnumerable<WikiModEntry> mods)
+    /// <inheritdoc />
+    public void SaveData(IEnumerable<ModCompatibilityEntry> mods)
     {
-        this.Metadata = new Cached<WikiMetadata>(new WikiMetadata());
-        this.Mods = mods.Select(mod => new Cached<WikiModEntry>(mod)).ToArray();
+        this.Metadata = new Cached<CompatibilityListMetadata>(new CompatibilityListMetadata());
+        this.Mods = mods.Select(mod => new Cached<ModCompatibilityEntry>(mod)).ToArray();
     }
 }

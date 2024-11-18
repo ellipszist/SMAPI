@@ -17,9 +17,9 @@ internal class ModsController : Controller
     ** Fields
     *********/
     /// <summary>The cache in which to store mod metadata.</summary>
-    private readonly IWikiCacheRepository Cache;
+    private readonly ICompatibilityCacheRepository Cache;
 
-    /// <summary>The number of minutes before which wiki data should be considered old.</summary>
+    /// <summary>The number of minutes before which compatibility list data should be considered old.</summary>
     private readonly int StaleMinutes;
 
 
@@ -29,7 +29,7 @@ internal class ModsController : Controller
     /// <summary>Construct an instance.</summary>
     /// <param name="cache">The cache in which to store mod metadata.</param>
     /// <param name="configProvider">The config settings for mod update checks.</param>
-    public ModsController(IWikiCacheRepository cache, IOptions<ModCompatibilityListConfig> configProvider)
+    public ModsController(ICompatibilityCacheRepository cache, IOptions<ModCompatibilityListConfig> configProvider)
     {
         ModCompatibilityListConfig config = configProvider.Value;
 
@@ -49,17 +49,17 @@ internal class ModsController : Controller
     /*********
     ** Private methods
     *********/
-    /// <summary>Asynchronously fetch mod metadata from the wiki.</summary>
+    /// <summary>Asynchronously fetch mod metadata from the compatibility list.</summary>
     public ModListModel FetchData()
     {
         // fetch cached data
-        if (!this.Cache.TryGetWikiMetadata(out Cached<WikiMetadata>? metadata))
+        if (!this.Cache.TryGetCacheMetadata(out Cached<CompatibilityListMetadata>? metadata))
             return new ModListModel(Array.Empty<ModModel>(), lastUpdated: DateTimeOffset.UtcNow, isStale: true);
 
         // build model
         return new ModListModel(
             mods: this.Cache
-                .GetWikiMods()
+                .GetMods()
                 .Select(mod => new ModModel(mod.Data))
                 .OrderBy(p => Regex.Replace((p.Name ?? "").ToLower(), "[^a-z0-9]", "")), // ignore case, spaces, and special characters when sorting
             lastUpdated: metadata.LastUpdated,

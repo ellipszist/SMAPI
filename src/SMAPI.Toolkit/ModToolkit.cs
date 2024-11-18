@@ -63,10 +63,10 @@ public class ModToolkit
         return new GameScanner().ScanIncludingInvalid();
     }
 
-    /// <summary>Extract mod metadata from the wiki compatibility list.</summary>
-    public async Task<WikiModList> GetWikiCompatibilityListAsync()
+    /// <summary>Extract mod metadata from the compatibility list repo.</summary>
+    public async Task<ModCompatibilityEntry[]> GetCompatibilityListAsync()
     {
-        using WikiClient client = new(this.UserAgent);
+        using CompatibilityRepoClient client = new(this.UserAgent);
         return await client.FetchModsAsync();
     }
 

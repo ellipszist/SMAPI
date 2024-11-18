@@ -8,6 +8,7 @@
   * `PathUtilities.IsSlug` is now less strict and allows more Unicode characters.
 
 * For the web UI:
+  * Revamped how the mod compatibility list works to simplify maintenance.
   * Fixed CurseForge links not shown for mods that have a CurseForge page.
 
 ## 4.1.7

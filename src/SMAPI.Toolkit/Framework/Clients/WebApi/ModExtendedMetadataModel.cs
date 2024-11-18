@@ -58,7 +58,7 @@ public class ModExtendedMetadataModel
     ****/
     /// <summary>The compatibility status.</summary>
     [JsonConverter(typeof(StringEnumConverter))]
-    public WikiCompatibilityStatus? CompatibilityStatus { get; set; }
+    public ModCompatibilityStatus? CompatibilityStatus { get; set; }
 
     /// <summary>The human-readable summary of the compatibility status or workaround, without HTML formatting.</summary>
     public string? CompatibilitySummary { get; set; }
@@ -86,38 +86,38 @@ public class ModExtendedMetadataModel
     public ModExtendedMetadataModel() { }
 
     /// <summary>Construct an instance.</summary>
-    /// <param name="wiki">The mod metadata from the wiki (if available).</param>
+    /// <param name="compatibility">The mod metadata from the mod compatibility list (if available).</param>
     /// <param name="db">The mod metadata from SMAPI's internal DB (if available).</param>
     /// <param name="main">The main version.</param>
     /// <param name="optional">The latest optional version, if newer than <paramref name="main"/>.</param>
     /// <param name="unofficial">The latest unofficial version, if newer than <paramref name="main"/> and <paramref name="optional"/>.</param>
-    public ModExtendedMetadataModel(WikiModEntry? wiki, ModDataRecord? db, ModEntryVersionModel? main, ModEntryVersionModel? optional, ModEntryVersionModel? unofficial)
+    public ModExtendedMetadataModel(ModCompatibilityEntry? compatibility, ModDataRecord? db, ModEntryVersionModel? main, ModEntryVersionModel? optional, ModEntryVersionModel? unofficial)
     {
         // versions
         this.Main = main;
         this.Optional = optional;
         this.Unofficial = unofficial;
 
-        // wiki data
-        if (wiki != null)
+        // compatibility list data
+        if (compatibility != null)
         {
-            this.ID = wiki.ID;
-            this.Name = wiki.Name.FirstOrDefault();
-            this.NexusID = wiki.NexusID;
-            this.ChucklefishID = wiki.ChucklefishID;
-            this.CurseForgeID = wiki.CurseForgeID;
-            this.ModDropID = wiki.ModDropID;
-            this.GitHubRepo = wiki.GitHubRepo;
-            this.CustomSourceUrl = wiki.CustomSourceUrl;
-            this.CustomUrl = wiki.CustomUrl;
+            this.ID = compatibility.ID;
+            this.Name = compatibility.Name.FirstOrDefault();
+            this.NexusID = compatibility.NexusID;
+            this.ChucklefishID = compatibility.ChucklefishID;
+            this.CurseForgeID = compatibility.CurseForgeID;
+            this.ModDropID = compatibility.ModDropID;
+            this.GitHubRepo = compatibility.GitHubRepo;
+            this.CustomSourceUrl = compatibility.CustomSourceUrl;
+            this.CustomUrl = compatibility.CustomUrl;
 
-            this.CompatibilityStatus = wiki.Compatibility.Status;
-            this.CompatibilitySummary = wiki.Compatibility.Summary;
-            this.BrokeIn = wiki.Compatibility.BrokeIn;
+            this.CompatibilityStatus = compatibility.Compatibility.Status;
+            this.CompatibilitySummary = compatibility.Compatibility.Summary;
+            this.BrokeIn = compatibility.Compatibility.BrokeIn;
 
-            this.ChangeLocalVersions = wiki.Overrides?.ChangeLocalVersions?.ToString();
-            this.ChangeRemoteVersions = wiki.Overrides?.ChangeRemoteVersions?.ToString();
-            this.ChangeUpdateKeys = wiki.Overrides?.ChangeUpdateKeys?.ToString();
+            this.ChangeLocalVersions = compatibility.Overrides?.ChangeLocalVersions?.ToString();
+            this.ChangeRemoteVersions = compatibility.Overrides?.ChangeRemoteVersions?.ToString();
+            this.ChangeUpdateKeys = compatibility.Overrides?.ChangeUpdateKeys?.ToString();
         }
 
         // internal DB data
