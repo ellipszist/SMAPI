@@ -7,6 +7,9 @@
     _For example, `PathUtilities.CreateSlug("some 例子?!/\\~ text")` becomes `"some-例子-text"`._
   * `PathUtilities.IsSlug` is now less strict and allows more Unicode characters.
 
+* For the web UI:
+  * Fixed CurseForge links not shown for mods that have a CurseForge page.
+
 ## 4.1.7
 Released 12 November 2024 for Stardew Valley 1.6.14 or later.
 

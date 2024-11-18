@@ -105,7 +105,6 @@ public class WikiClient : IDisposable
             int? nexusID = this.GetAttributeAsNullableInt(node, "data-nexus-id");
             int? chucklefishID = this.GetAttributeAsNullableInt(node, "data-cf-id");
             int? curseForgeID = this.GetAttributeAsNullableInt(node, "data-curseforge-id");
-            string? curseForgeKey = this.GetAttribute(node, "data-curseforge-key");
             int? modDropID = this.GetAttributeAsNullableInt(node, "data-moddrop-id");
             string? githubRepo = this.GetAttribute(node, "data-github");
             string? customSourceUrl = this.GetAttribute(node, "data-custom-source");
@@ -113,7 +112,6 @@ public class WikiClient : IDisposable
             string? anchor = this.GetAttribute(node, "id");
             string? contentPackFor = this.GetAttribute(node, "data-content-pack-for");
             string? devNote = this.GetAttribute(node, "data-dev-note");
-            string? pullRequestUrl = this.GetAttribute(node, "data-pr");
 
             // parse stable compatibility
             WikiCompatibilityInfo compatibility = new(
@@ -137,7 +135,6 @@ public class WikiClient : IDisposable
                 nexusId: nexusID,
                 chucklefishId: chucklefishID,
                 curseForgeId: curseForgeID,
-                curseForgeKey: curseForgeKey,
                 modDropId: modDropID,
                 githubRepo: githubRepo,
                 customSourceUrl: customSourceUrl,
@@ -145,7 +142,6 @@ public class WikiClient : IDisposable
                 contentPackFor: contentPackFor,
                 compatibility: compatibility,
                 warnings: warnings,
-                pullRequestUrl: pullRequestUrl,
                 devNote: devNote,
                 overrides: overrides,
                 anchor: anchor

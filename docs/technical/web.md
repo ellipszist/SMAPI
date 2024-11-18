@@ -259,7 +259,6 @@ field | summary
 `nexusID` | The mod ID on [Nexus Mods](https://www.nexusmods.com/stardewvalley/), if any.
 `chucklefishID` | The mod ID in the [Chucklefish mod repo](https://community.playstarbound.com/resources/categories/stardew-valley.22/), if any.
 `curseForgeID` | The mod project ID on [CurseForge](https://www.curseforge.com/stardewvalley), if any.
-`curseForgeKey` | The mod key on [CurseForge](https://www.curseforge.com/stardewvalley), if any. This is used in the mod page URL.
 `modDropID` | The mod ID on [ModDrop](https://www.moddrop.com/stardew-valley), if any.
 `gitHubRepo` | The GitHub repository containing the mod code, if any. Specified in the `Owner/Repo` form.
 `customSourceUrl` | The custom URL to the mod code, if any. This is used for mods which aren't stored in a GitHub repo.
@@ -303,7 +302,6 @@ Example response with `includeExtendedMetadata: true`:
          "name": "Content Patcher",
          "nexusID": 1915,
          "curseForgeID": 309243,
-         "curseForgeKey": "content-patcher",
          "modDropID": 470174,
          "gitHubRepo": "Pathoschild/StardewMods",
          "main": {

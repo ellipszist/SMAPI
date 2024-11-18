@@ -27,9 +27,6 @@ public class WikiModEntry
     /// <summary>The mod ID in the CurseForge mod repo.</summary>
     public int? CurseForgeID { get; }
 
-    /// <summary>The mod key in the CurseForge mod repo (used in mod page URLs).</summary>
-    public string? CurseForgeKey { get; }
-
     /// <summary>The mod ID in the ModDrop mod repo.</summary>
     public int? ModDropID { get; }
 
@@ -51,9 +48,6 @@ public class WikiModEntry
     /// <summary>The human-readable warnings for players about this mod.</summary>
     public string[] Warnings { get; }
 
-    /// <summary>The URL of the pull request which submits changes for an unofficial update to the author, if any.</summary>
-    public string? PullRequestUrl { get; }
-
     /// <summary>Special notes intended for developers who maintain unofficial updates or submit pull requests.</summary>
     public string? DevNote { get; }
 
@@ -74,7 +68,6 @@ public class WikiModEntry
     /// <param name="nexusId">The mod ID on Nexus.</param>
     /// <param name="chucklefishId">The mod ID in the Chucklefish mod repo.</param>
     /// <param name="curseForgeId">The mod ID in the CurseForge mod repo.</param>
-    /// <param name="curseForgeKey">The mod ID in the CurseForge mod repo.</param>
     /// <param name="modDropId">The mod ID in the ModDrop mod repo.</param>
     /// <param name="githubRepo">The GitHub repository in the form 'owner/repo'.</param>
     /// <param name="customSourceUrl">The URL to a non-GitHub source repo.</param>
@@ -82,11 +75,10 @@ public class WikiModEntry
     /// <param name="contentPackFor">The name of the mod which loads this content pack, if applicable.</param>
     /// <param name="compatibility">The mod's compatibility with the latest stable version of the game.</param>
     /// <param name="warnings">The human-readable warnings for players about this mod.</param>
-    /// <param name="pullRequestUrl">The URL of the pull request which submits changes for an unofficial update to the author, if any.</param>
     /// <param name="devNote">Special notes intended for developers who maintain unofficial updates or submit pull requests.</param>
     /// <param name="overrides">The data overrides to apply to the mod's manifest or remote mod page data, if any.</param>
     /// <param name="anchor">The link anchor for the mod entry in the wiki compatibility list.</param>
-    public WikiModEntry(string[] id, string[] name, string[] author, int? nexusId, int? chucklefishId, int? curseForgeId, string? curseForgeKey, int? modDropId, string? githubRepo, string? customSourceUrl, string? customUrl, string? contentPackFor, WikiCompatibilityInfo compatibility, string[] warnings, string? pullRequestUrl, string? devNote, WikiDataOverrideEntry? overrides, string? anchor)
+    public WikiModEntry(string[] id, string[] name, string[] author, int? nexusId, int? chucklefishId, int? curseForgeId, int? modDropId, string? githubRepo, string? customSourceUrl, string? customUrl, string? contentPackFor, WikiCompatibilityInfo compatibility, string[] warnings, string? devNote, WikiDataOverrideEntry? overrides, string? anchor)
     {
         this.ID = id;
         this.Name = name;
@@ -94,7 +86,6 @@ public class WikiModEntry
         this.NexusID = nexusId;
         this.ChucklefishID = chucklefishId;
         this.CurseForgeID = curseForgeId;
-        this.CurseForgeKey = curseForgeKey;
         this.ModDropID = modDropId;
         this.GitHubRepo = githubRepo;
         this.CustomSourceUrl = customSourceUrl;
@@ -102,7 +93,6 @@ public class WikiModEntry
         this.ContentPackFor = contentPackFor;
         this.Compatibility = compatibility;
         this.Warnings = warnings;
-        this.PullRequestUrl = pullRequestUrl;
         this.DevNote = devNote;
         this.Overrides = overrides;
         this.Anchor = anchor;
@@ -124,10 +114,10 @@ public class WikiModEntry
             anyFound = true;
             yield return new KeyValuePair<ModSiteKey, string>(ModSiteKey.ModDrop, $"https://www.moddrop.com/stardew-valley/mod/{this.ModDropID}");
         }
-        if (!string.IsNullOrWhiteSpace(this.CurseForgeKey))
+        if (this.CurseForgeID.HasValue)
         {
             anyFound = true;
-            yield return new KeyValuePair<ModSiteKey, string>(ModSiteKey.CurseForge, $"https://www.curseforge.com/stardewvalley/mods/{this.CurseForgeKey}");
+            yield return new KeyValuePair<ModSiteKey, string>(ModSiteKey.CurseForge, $"https://www.curseforge.com/projects/{this.CurseForgeID}");
         }
         if (this.ChucklefishID.HasValue)
         {

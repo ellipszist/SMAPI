@@ -39,9 +39,6 @@ public class ModModel
     /// <summary>The human-readable warnings for players about this mod.</summary>
     public string[] Warnings { get; }
 
-    /// <summary>The URL of the pull request which submits changes for an unofficial update to the author, if any.</summary>
-    public string? PullRequestUrl { get; }
-
     /// <summary>Special notes intended for developers who maintain unofficial updates or submit pull requests.</summary>
     public string? DevNote { get; }
 
@@ -65,11 +62,10 @@ public class ModModel
     /// <param name="compatibility">The compatibility status for the stable version of the game.</param>
     /// <param name="modPages">Links to the available mod pages.</param>
     /// <param name="warnings">The human-readable warnings for players about this mod.</param>
-    /// <param name="pullRequestUrl">The URL of the pull request which submits changes for an unofficial update to the author, if any.</param>
     /// <param name="devNote">Special notes intended for developers who maintain unofficial updates or submit pull requests.</param>
     /// <param name="slug">A unique identifier for the mod that can be used in an anchor URL.</param>
     [JsonConstructor]
-    public ModModel(string? name, string alternateNames, string author, string alternateAuthors, string gitHubRepo, string sourceUrl, ModCompatibilityModel compatibility, ModLinkModel[] modPages, string[] warnings, string pullRequestUrl, string devNote, string slug)
+    public ModModel(string? name, string alternateNames, string author, string alternateAuthors, string gitHubRepo, string sourceUrl, ModCompatibilityModel compatibility, ModLinkModel[] modPages, string[] warnings, string devNote, string slug)
     {
         this.Name = name;
         this.AlternateNames = alternateNames;
@@ -80,7 +76,6 @@ public class ModModel
         this.Compatibility = compatibility;
         this.ModPages = modPages;
         this.Warnings = warnings;
-        this.PullRequestUrl = pullRequestUrl;
         this.DevNote = devNote;
         this.Slug = slug;
     }
@@ -99,7 +94,6 @@ public class ModModel
         this.Compatibility = new ModCompatibilityModel(entry.Compatibility);
         this.ModPages = this.GetModPageUrls(entry).ToArray();
         this.Warnings = entry.Warnings;
-        this.PullRequestUrl = entry.PullRequestUrl;
         this.DevNote = entry.DevNote;
         this.Slug = entry.Anchor;
     }
