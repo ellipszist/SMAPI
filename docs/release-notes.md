@@ -2,6 +2,9 @@
 
 # Release notes
 ## Upcoming release
+* For players:
+  * Updated mod compatibility list.
+
 * For mod authors:
   * Added `PathUtilities.CreateSlug` to turn an arbitrary string into a safe 'slug' that can be used in special contexts like URLs and file paths.  
     _For example, `PathUtilities.CreateSlug("some 例子?!/\\~ text")` becomes `"some-例子-text"`._
@@ -12,7 +15,8 @@
   * Fixed CurseForge links not shown for mods that have a CurseForge page.
 
 * For external tools:
-  * Added method to the SMAPI toolkit to get the URL for a given update site key + mod ID.
+  * Updated SMAPI toolkit for the new [mod compatibility repo](https://github.com/Pathoschild/SmapiCompatibilityList), which replaces the former [wiki page](https://stardewvalleywiki.com/Modding:Mod_compatibility).
+  * Added toolkit method to get the URL from an update key site + mod ID.
 
 ## 4.1.7
 Released 12 November 2024 for Stardew Valley 1.6.14 or later.
