@@ -73,5 +73,5 @@ internal class RawModEntry
     ** Data overrides
     ****/
     /// <summary>The data overrides to apply to the mod's manifest or remote mod page data, if any.</summary>
-    public RawModDataOverride[]? Overrides { get; set; }
+    public RawModDataOverride[]? OverrideModData { get; set; }
 }

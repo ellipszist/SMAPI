@@ -170,7 +170,7 @@ public class CompatibilityRepoClient : IDisposable
             ),
             warnings: rawModEntry.Warnings ?? Array.Empty<string>(),
             devNote: rawModEntry.DeveloperNotes,
-            overrides: this.ParseOverrideEntries(modIds, rawModEntry.Overrides),
+            overrides: this.ParseOverrideEntries(modIds, rawModEntry.OverrideModData),
             anchor: PathUtilities.CreateSlug(modNames.FirstOrDefault())?.ToLower()
         );
     }
