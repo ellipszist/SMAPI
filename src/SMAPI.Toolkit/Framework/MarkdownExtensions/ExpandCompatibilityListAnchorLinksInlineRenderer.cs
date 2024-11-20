@@ -18,7 +18,7 @@ public class ExpandCompatibilityListAnchorLinksInlineRenderer : LinkInlineRender
         if (link.Url == "#")
         {
             string linkText = this.GetLinkText(link);
-            link.Url = '#' + PathUtilities.CreateSlug(linkText);
+            link.Url = '#' + PathUtilities.CreateSlug(linkText).ToLower();
         }
 
         base.Write(renderer, link);

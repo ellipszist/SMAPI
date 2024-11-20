@@ -16,9 +16,6 @@ public static class PathUtilities
     /// <summary>The root prefix for a Windows UNC path.</summary>
     private const string WindowsUncRoot = @"\\";
 
-    /// <summary>The regex characters that are allowed in a 'slug' that can be used in many different contexts, formatted for use in a <c>[]</c> regex character class.</summary>
-    private const string SlugCharacterClass = @"\p{L}\d\-_\."; // Unicode 'letter' character, digit, dash, underscore, or period
-
 
     /*********
     ** Accessors
@@ -179,26 +176,36 @@ public static class PathUtilities
             && PathUtilities.GetSegments(path).All(segment => segment.Trim() != "..");
     }
 
-    /// <summary>Create a 'slug' containing only basic characters that are safe in all contexts (e.g. filenames, URLs, etc).</summary>
+    /// <summary>Create a 'slug' containing only basic characters that are safe in all contexts like filenames, URLs, etc.</summary>
     /// <param name="input">The string to represent.</param>
+    /// <remarks>The behavior of this method isn't guaranteed to remain unchanged. You should only use this method is cases where you can use it consistently and the values aren't stored across different versions of SMAPI.</remarks>
     [Pure]
 #if NET6_0_OR_GREATER
     [return: NotNullIfNotNull("input")]
 #endif
     public static string? CreateSlug(string? input)
     {
+        //
+        // This pattern is synced with IsSlug below.
+        //
+
         return string.IsNullOrWhiteSpace(input)
             ? input
-            : Regex.Replace(input, "[^" + PathUtilities.SlugCharacterClass + "]+", "-").TrimStart('-');
+            : Regex.Replace(input, @"[^\p{L}\d_\.]+", "-").TrimStart('-');
     }
 
-    /// <summary>Get whether a string is a valid 'slug', containing only basic characters that are safe in all contexts (e.g. filenames, URLs, etc).</summary>
+    /// <summary>Get whether a string is a valid 'slug', containing only basic characters that are safe in all contexts like filenames, URLs, etc.</summary>
     /// <param name="str">The string to check.</param>
+    /// <remarks>The behavior of this method isn't guaranteed to remain unchanged. You should only use this method is cases where you can use it consistently and the values aren't stored across different versions of SMAPI.</remarks>
     [Pure]
     public static bool IsSlug(string? str)
     {
+        //
+        // This uses the same pattern as CreateSlug, with the addition of '-'.
+        //
+
         return
-            string.IsNullOrWhiteSpace(str)
-            || !Regex.IsMatch(str, "[^+" + PathUtilities.SlugCharacterClass + "]", RegexOptions.IgnoreCase);
+            string.IsNullOrEmpty(str)
+            || !Regex.IsMatch(str, @"[^\p{L}\d_\.\-]", RegexOptions.IgnoreCase);
     }
 }

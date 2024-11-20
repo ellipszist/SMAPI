@@ -171,7 +171,7 @@ public class CompatibilityRepoClient : IDisposable
             warnings: rawModEntry.Warnings ?? Array.Empty<string>(),
             devNote: rawModEntry.DeveloperNotes,
             overrides: this.ParseOverrideEntries(modIds, rawModEntry.Overrides),
-            anchor: PathUtilities.CreateSlug(modIds.FirstOrDefault())?.ToLower()
+            anchor: PathUtilities.CreateSlug(modNames.FirstOrDefault())?.ToLower()
         );
     }
 
