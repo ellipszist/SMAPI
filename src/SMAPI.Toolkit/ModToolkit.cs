@@ -98,14 +98,24 @@ public class ModToolkit
 
     /// <summary>Get an update URL for an update key (if valid).</summary>
     /// <param name="updateKey">The update key.</param>
+    /// <returns>Returns the URL if the mod site is supported, else <c>null</c>.</returns>
     public string? GetUpdateUrl(string updateKey)
     {
         UpdateKey parsed = UpdateKey.Parse(updateKey);
         if (!parsed.LooksValid)
             return null;
 
-        if (this.VendorModUrls.TryGetValue(parsed.Site, out string? urlTemplate))
-            return string.Format(urlTemplate, parsed.ID);
+        return this.GetUpdateUrl(parsed.Site, parsed.ID);
+    }
+
+    /// <summary>Get an update URL for an update key (if valid).</summary>
+    /// <param name="site">The mod site containing the mod.</param>
+    /// <param name="id">The mod ID within the site.</param>
+    /// <returns>Returns the URL if the mod site is supported, else <c>null</c>.</returns>
+    public string? GetUpdateUrl(ModSiteKey site, string id)
+    {
+        if (this.VendorModUrls.TryGetValue(site, out string? urlTemplate))
+            return string.Format(urlTemplate, id);
 
         return null;
     }

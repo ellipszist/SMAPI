@@ -1,7 +1,9 @@
-namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal.DataModels;
+using System;
+
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.RawDataModels;
 
 /// <summary>The compatibility metadata for a mod in the raw data.</summary>
-internal class RawModEntry
+public class RawModEntry
 {
     /*********
     ** Properties
@@ -74,4 +76,104 @@ internal class RawModEntry
     ****/
     /// <summary>The data overrides to apply to the mod's manifest or remote mod page data, if any.</summary>
     public RawModDataOverride[]? OverrideModData { get; set; }
+
+
+    /*********
+    ** Public methods
+    *********/
+    /// <summary>Get whether this mod has a source code link.</summary>
+    public bool HasSource()
+    {
+        return
+            !string.IsNullOrWhiteSpace(this.GitHub)
+            || !string.IsNullOrWhiteSpace(this.Source);
+    }
+
+    /// <summary>Get the mod's compatibility status based on its fields.</summary>
+    public ModCompatibilityStatus GetStatus()
+    {
+        if (!Enum.TryParse(this.Status, true, out ModCompatibilityStatus status))
+        {
+            if (this.UnofficialUpdate != null)
+                status = ModCompatibilityStatus.Unofficial;
+            else if (this.BrokeIn != null)
+                status = ModCompatibilityStatus.Broken;
+            else
+                status = ModCompatibilityStatus.Ok;
+        }
+
+        return status;
+    }
+
+    /// <summary>Get the compatibility summary as shown on the compatibility list.</summary>
+    /// <param name="summary">The compatibility summary.</param>
+    /// <param name="mayBeMarkdown">Whether the summary may contain Markdown formatting.</param>
+    public void GetCompatibilitySummary(out string summary, out bool mayBeMarkdown)
+    {
+        // get mod info
+        bool hasSource = this.HasSource();
+        ModCompatibilityStatus status = this.GetStatus();
+
+        // get icon
+        char statusIcon = status switch
+        {
+            ModCompatibilityStatus.Unofficial or ModCompatibilityStatus.Workaround => '⚠',
+            ModCompatibilityStatus.Broken when hasSource => '↻',
+            ModCompatibilityStatus.Broken or ModCompatibilityStatus.Obsolete or ModCompatibilityStatus.Abandoned => '✖',
+            _ => '✓'
+        };
+
+        // get summary
+        if (this.Summary is not null)
+        {
+            summary = $"{statusIcon} {this.Summary}";
+            mayBeMarkdown = true;
+        }
+        else
+        {
+            mayBeMarkdown = false;
+
+            switch (status)
+            {
+                case ModCompatibilityStatus.Ok:
+                    summary = "use latest version.";
+                    break;
+
+                case ModCompatibilityStatus.Optional:
+                    summary = "use optional download.";
+                    break;
+
+                case ModCompatibilityStatus.Unofficial:
+                    summary = $"broken, use [unofficial version]({this.UnofficialUpdate?.Url})";
+                    if (this.UnofficialUpdate?.Version != null)
+                        summary += $" (<small>{this.UnofficialUpdate.Version}</small>)";
+                    summary += '.';
+                    mayBeMarkdown = true;
+                    break;
+
+                case ModCompatibilityStatus.Workaround:
+                    summary = "broken [**error:** should specify summary].";
+                    mayBeMarkdown = true;
+                    break;
+
+                case ModCompatibilityStatus.Broken:
+                    summary = hasSource
+                        ? "broken, not updated yet."
+                        : "broken, not open-source.";
+                    break;
+
+                case ModCompatibilityStatus.Obsolete:
+                    summary = "remove this mod (obsolete).";
+                    break;
+
+                case ModCompatibilityStatus.Abandoned:
+                    summary = "remove this mod (no longer maintained).";
+                    break;
+
+                default:
+                    summary = $"[**error:** unknown status '{status}'.]";
+                    break;
+            }
+        }
+    }
 }

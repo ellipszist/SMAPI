@@ -1,7 +1,7 @@
-namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal.DataModels;
+namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.RawDataModels;
 
 /// <summary>The main data model for the raw compatibility data.</summary>
-internal class RawCompatibilityList
+public class RawCompatibilityList
 {
     /// <summary>The compatibility data for C# SMAPI mods.</summary>
     public RawModEntry[]? Mods { get; set; }

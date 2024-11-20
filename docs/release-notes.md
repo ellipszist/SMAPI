@@ -11,6 +11,9 @@
   * Revamped how the mod compatibility list works to simplify maintenance.
   * Fixed CurseForge links not shown for mods that have a CurseForge page.
 
+* For external tools:
+  * Added method to the SMAPI toolkit to get the URL for a given update site key + mod ID.
+
 ## 4.1.7
 Released 12 November 2024 for Stardew Valley 1.6.14 or later.
 

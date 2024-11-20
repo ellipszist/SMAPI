@@ -5,7 +5,7 @@ using Pathoschild.Http.Client.Extensibility;
 namespace StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal;
 
 /// <summary>An HTTP filter which sets the content type for all responses received to <c>text/json</c>.</summary>
-internal class ForceJsonResponseTypeFilter : IHttpFilter
+public class ForceJsonResponseTypeFilter : IHttpFilter
 {
     /// <inheritdoc />
     public void OnRequest(IRequest request) { }

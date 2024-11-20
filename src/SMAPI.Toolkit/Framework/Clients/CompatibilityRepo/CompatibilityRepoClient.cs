@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Markdig;
 using Pathoschild.Http.Client;
 using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal;
-using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal.DataModels;
+using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.RawDataModels;
 using StardewModdingAPI.Toolkit.Framework.MarkdownExtensions;
 using StardewModdingAPI.Toolkit.Utilities;
 
@@ -48,101 +48,43 @@ public class CompatibilityRepoClient : IDisposable
         return
             (response.Mods ?? Array.Empty<RawModEntry>())
             .Concat(response.BrokenContentPacks ?? Array.Empty<RawModEntry>())
-            .Select(this.ParseModEntry)
+            .Select(this.ParseRawModEntry)
             .ToArray();
     }
 
-    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-    public void Dispose()
+    /// <summary>Get the inline HTML produced by a Markdown string in a compatibility repo field.</summary>
+    /// <param name="markdown">The Markdown to parse.</param>
+    /// <remarks>This is a low-level method. Most code should use <see cref="FetchModsAsync"/> instead.</remarks>
+    public string ParseMarkdownToInlineHtml(string markdown)
     {
-        this.Client.Dispose();
+        string html = Markdown.ToHtml(markdown, this.MarkdownPipeline);
+
+        // Markdown wraps all content with <p></p>, and there's no non-hacky way to disable it.
+        // We need to strip them since the content is shown inline.
+        html = html.Trim();
+        if (html.StartsWith("<p>", StringComparison.OrdinalIgnoreCase) && html.EndsWith("</p>", StringComparison.OrdinalIgnoreCase) && html.IndexOf("<p>", 3, StringComparison.OrdinalIgnoreCase) == -1)
+            html = html.Substring(3, html.Length - 7);
+
+        return html;
     }
 
-    /*********
-    ** Private methods
-    *********/
     /// <summary>Parse a mod compatibility entry.</summary>
     /// <param name="rawModEntry">The HTML compatibility entries.</param>
-    private ModCompatibilityEntry ParseModEntry(RawModEntry rawModEntry)
+    /// <remarks>This is a low-level method. Most code should use <see cref="FetchModsAsync"/> instead.</remarks>
+    public ModCompatibilityEntry ParseRawModEntry(RawModEntry rawModEntry)
     {
         // parse main fields
         string[] modIds = this.GetCsv(rawModEntry.Id);
         string[] modNames = this.GetCsv(rawModEntry.Name);
         string[] authorNames = this.GetCsv(rawModEntry.Author);
-
-        // parse status
-        if (!Enum.TryParse(rawModEntry.Status, true, out ModCompatibilityStatus status))
-        {
-            if (rawModEntry.UnofficialUpdate != null)
-                status = ModCompatibilityStatus.Unofficial;
-            else if (rawModEntry.BrokeIn != null)
-                status = ModCompatibilityStatus.Broken;
-            else
-                status = ModCompatibilityStatus.Ok;
-        }
-
-        // parse summary
-        bool hasSource = rawModEntry.GitHub != null || rawModEntry.Source != null;
-        char summaryIcon = status switch
-        {
-            ModCompatibilityStatus.Unofficial or ModCompatibilityStatus.Workaround => '⚠',
-            ModCompatibilityStatus.Broken when hasSource => '↻',
-            ModCompatibilityStatus.Broken or ModCompatibilityStatus.Obsolete or ModCompatibilityStatus.Abandoned => '✖',
-            _ => '✓'
-        };
-        string? summary = rawModEntry.Summary;
-        bool hasMarkdown = summary != null;
-        if (summary is null)
-        {
-            switch (status)
-            {
-                case ModCompatibilityStatus.Ok:
-                    summary = "use latest version.";
-                    break;
-
-                case ModCompatibilityStatus.Optional:
-                    summary = "use optional download.";
-                    break;
-
-                case ModCompatibilityStatus.Unofficial:
-                    summary = $"broken, use [unofficial version]({rawModEntry.UnofficialUpdate?.Url})";
-                    if (rawModEntry.UnofficialUpdate?.Version != null)
-                        summary += $" (<small>{rawModEntry.UnofficialUpdate.Version}</small>)";
-                    summary += '.';
-                    hasMarkdown = true;
-                    break;
-
-                case ModCompatibilityStatus.Workaround:
-                    summary = "broken [**error:** should specify summary].";
-                    hasMarkdown = true;
-                    break;
-
-                case ModCompatibilityStatus.Broken:
-                    summary = hasSource
-                        ? "broken, not updated yet."
-                        : "broken, not open-source.";
-                    break;
-
-                case ModCompatibilityStatus.Obsolete:
-                    summary = "remove this mod (obsolete).";
-                    break;
-
-                case ModCompatibilityStatus.Abandoned:
-                    summary = "remove this mod (no longer maintained).";
-                    break;
-
-                default:
-                    summary = $"[**error:** unknown status '{status}'.]";
-                    break;
-            }
-        }
-        summary = $"{summaryIcon} {summary}";
+        ModCompatibilityStatus status = rawModEntry.GetStatus();
+        rawModEntry.GetCompatibilitySummary(out string summary, out bool hasMarkdown);
 
         // get HTML summary
         string? htmlSummary = null;
         if (hasMarkdown)
         {
-            htmlSummary = this.ToInlineHtml(summary);
+            htmlSummary = this.ParseMarkdownToInlineHtml(summary);
             if (htmlSummary == summary)
                 htmlSummary = null;
         }
@@ -175,21 +117,16 @@ public class CompatibilityRepoClient : IDisposable
         );
     }
 
-    /// <summary>Get the inline HTML produced by a Markdown string.</summary>
-    /// <param name="markdown">The Markdown to parse.</param>
-    private string ToInlineHtml(string markdown)
+    /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+    public void Dispose()
     {
-        string html = Markdown.ToHtml(markdown, this.MarkdownPipeline);
-
-        // Markdown wraps all content with <p></p>, and there's no non-hacky way to disable it.
-        // We need to strip them since the content is shown inline.
-        html = html.Trim();
-        if (html.StartsWith("<p>", StringComparison.OrdinalIgnoreCase) && html.EndsWith("</p>", StringComparison.OrdinalIgnoreCase) && html.IndexOf("<p>", 3, StringComparison.OrdinalIgnoreCase) == -1)
-            html = html.Substring(3, html.Length - 7);
-
-        return html;
+        this.Client.Dispose();
     }
 
+
+    /*********
+    ** Private methods
+    *********/
     /// <summary>Parse valid mod data override entries.</summary>
     /// <param name="modIds">The mod's unique IDs.</param>
     /// <param name="overrides">The raw data override entries to parse.</param>
