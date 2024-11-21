@@ -4,11 +4,13 @@
 ## Upcoming release
 * For players:
   * Updated mod compatibility list.
+  * Fixed crash with some rare combinations of mods involving Harmony and mod APIs.
 
 * For mod authors:
   * Added `PathUtilities.CreateSlug` to turn an arbitrary string into a safe 'slug' that can be used in special contexts like URLs and file paths.  
     _For example, `PathUtilities.CreateSlug("some 例子?!/\\~ text")` becomes `"some-例子-text"`._
   * `PathUtilities.IsSlug` is now less strict and allows more Unicode characters.
+  * Updated [Pintail](https://github.com/Nanoray-pl/Pintail) 2.6.0 → 2.6.1 (see [changes](https://github.com/Nanoray-pl/Pintail/blob/master/docs/release-notes.md#261)).
 
 * For the web UI:
   * Revamped how the mod compatibility list works to simplify maintenance.
