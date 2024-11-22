@@ -14,6 +14,7 @@
 
 * For the web UI:
   * Revamped how the mod compatibility list works to simplify maintenance.
+  * Fixed log parser not highlighting update alerts for mods which SMAPI couldn't load.
   * Fixed CurseForge links not shown for mods that have a CurseForge page.
 
 * For external tools:
