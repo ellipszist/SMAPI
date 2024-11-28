@@ -29,7 +29,7 @@ public class CompatibilityRepoClient : IDisposable
     /// <summary>Construct an instance.</summary>
     /// <param name="fetchUrl">The full URL of the JSON file to fetch.</param>
     /// <param name="userAgent">The user agent for the API client.</param>
-    public CompatibilityRepoClient(string userAgent, string fetchUrl = "https://raw.githubusercontent.com/Pathoschild/SmapiCompatibilityList/refs/heads/develop/data/data.jsonc")
+    public CompatibilityRepoClient(string userAgent, string fetchUrl = "https://raw.githubusercontent.com/Pathoschild/SmapiCompatibilityList/refs/heads/release/data/data.jsonc")
     {
         this.Client = new FluentClient(fetchUrl).SetUserAgent(userAgent);
         this.MarkdownPipeline = new MarkdownPipelineBuilder()
