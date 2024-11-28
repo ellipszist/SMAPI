@@ -5,6 +5,7 @@
 * For players:
   * Updated mod compatibility list.
   * Fixed crash with some rare combinations of mods involving Harmony and mod APIs.
+  * Fixed compatibility with newer macOS security restrictions.
 
 * For mod authors:
   * Added `PathUtilities.CreateSlug` to turn an arbitrary string into a safe 'slug' that can be used in special contexts like URLs and file paths.  
