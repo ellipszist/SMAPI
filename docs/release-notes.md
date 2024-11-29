@@ -1,6 +1,28 @@
 ← [README](README.md)
 
 # Release notes
+## 4.1.8
+Released 28 November 2024 for Stardew Valley 1.6.14 or later.
+
+* For players:
+  * Updated the mod compatibility blacklist.
+  * Fixed compatibility with newer macOS security restrictions.
+  * Fixed crash with some rare combinations of mods involving Harmony and mod APIs.
+
+* For mod authors:
+  * Added `PathUtilities.CreateSlug` to get a safe Unicode string for use in special contexts like URLs and file paths.  
+    _For example, `PathUtilities.CreateSlug("some 例子?!/\\~ text")` becomes `"some-例子-text"`._
+  * `PathUtilities.IsSlug` now allows more Unicode characters.
+  * Updated [Pintail](https://github.com/Nanoray-pl/Pintail) 2.6.0 → 2.6.1 (see [changes](https://github.com/Nanoray-pl/Pintail/blob/master/docs/release-notes.md#261)).
+
+* For the web UI:
+  * Fixed log parser not highlighting update alerts for mods which SMAPI couldn't load.
+  * Fixed CurseForge links not shown for mods that have a CurseForge page.
+
+* For external tools:
+  * Revamped the mod compatibility list to simplify maintenance. It's now stored [in a Git repo](https://github.com/Pathoschild/SmapiCompatibilityList), which replaces the former [wiki page](https://stardewvalleywiki.com/Modding:Mod_compatibility).
+  * Added toolkit method to get the URL from an update key's site and mod ID.
+
 ## 4.1.7
 Released 12 November 2024 for Stardew Valley 1.6.14 or later.
 

@@ -415,6 +415,21 @@ internal class InteractiveInstaller
                             }
                         }.Start();
                     }
+
+                    // sign SMAPI on macOS
+                    // This avoids 'StardewModdingAPI will damage your computer' errors in newer versions.
+                    if (context.Platform is Platform.Mac)
+                    {
+                        new Process
+                        {
+                            StartInfo = new ProcessStartInfo
+                            {
+                                FileName = "codesign",
+                                Arguments = $"--force --sign - \"{paths.UnixSmapiExecutablePath}\"",
+                                CreateNoWindow = true
+                            }
+                        }.Start();
+                    }
                 }
 
                 // copy the game's deps.json file
