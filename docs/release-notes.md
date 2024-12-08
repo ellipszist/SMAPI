@@ -1,12 +1,16 @@
 ← [README](README.md)
 
 # Release notes
+# Upcoming release
+* For players:
+  * Fixed compatibility with new macOS security restrictions (again).
+
 ## 4.1.8
 Released 28 November 2024 for Stardew Valley 1.6.14 or later.
 
 * For players:
   * Updated the mod compatibility blacklist.
-  * Fixed compatibility with newer macOS security restrictions.
+  * Fixed compatibility with new macOS security restrictions.
   * Fixed crash with some rare combinations of mods involving Harmony and mod APIs.
 
 * For mod authors:
