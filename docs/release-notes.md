@@ -1,12 +1,19 @@
 ← [README](README.md)
 
 # Release notes
+# 4.1.9
+Released 08 December 2024 for Stardew Valley 1.6.14 or later.
+
+* For players:
+  * Fixed compatibility with new macOS security restrictions (again).
+  * Fixed unable to override color schemes via `smapi-internal/config.user.json`.
+
 ## 4.1.8
 Released 28 November 2024 for Stardew Valley 1.6.14 or later.
 
 * For players:
   * Updated the mod compatibility blacklist.
-  * Fixed compatibility with newer macOS security restrictions.
+  * Fixed compatibility with new macOS security restrictions.
   * Fixed crash with some rare combinations of mods involving Harmony and mod APIs.
 
 * For mod authors:
