@@ -4,6 +4,7 @@
 # Upcoming release
 * For players:
   * Fixed compatibility with new macOS security restrictions (again).
+  * Fixed unable to override color themes via `smapi-internal/config.user.json`.
 
 ## 4.1.8
 Released 28 November 2024 for Stardew Valley 1.6.14 or later.
