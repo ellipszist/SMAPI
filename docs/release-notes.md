@@ -1,6 +1,10 @@
 ← [README](README.md)
 
 # Release notes
+## Upcoming release
+* For mod authors:
+  * Improved [Content Patcher JSON schema](technical/web.md#using-a-schema-file-directly) to allow boolean and numeric values in dynamic tokens.
+
 # 4.1.9
 Released 08 December 2024 for Stardew Valley 1.6.14 or later.
 
