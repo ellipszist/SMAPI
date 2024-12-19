@@ -1,6 +1,24 @@
 ← [README](README.md)
 
 # Release notes
+## 4.1.10
+Released 18 December 2024 for Stardew Valley 1.6.14 or later.
+
+* For players:
+  * Updated for the upcoming Stardew Valley 1.6.15.
+  * Fixed errors when cross-playing between PC and Android.
+
+* For mod authors:
+  * Improved [Content Patcher JSON schema](technical/web.md#using-a-schema-file-directly) to allow boolean and numeric values in dynamic tokens.
+
+
+> [!IMPORTANT]  
+> **For players on macOS:**  
+> There are recent security changes in macOS. Make sure to follow the updated [install guide for
+> macOS](https://stardewvalleywiki.com/Modding:Installing_SMAPI_on_Mac) when installing or updating SMAPI.
+>
+> Players on Linux or Windows can ignore this.
+
 # 4.1.9
 Released 08 December 2024 for Stardew Valley 1.6.14 or later.
 
