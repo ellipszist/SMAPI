@@ -179,6 +179,7 @@ internal class SGame : Game1
     }
 
     /// <inheritdoc />
+    [SuppressMessage("ReSharper", "ParameterHidesMember")]
     protected internal override IDisplayDevice CreateDisplayDevice(ContentManager content, GraphicsDevice graphicsDevice)
     {
         return new SDisplayDevice(content, graphicsDevice);

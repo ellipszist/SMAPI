@@ -30,6 +30,7 @@ using StardewModdingAPI.Framework.ModHelpers;
 using StardewModdingAPI.Framework.ModLoading;
 using StardewModdingAPI.Framework.Networking;
 using StardewModdingAPI.Framework.Reflection;
+using StardewModdingAPI.Framework.Rendering;
 using StardewModdingAPI.Framework.Serialization;
 using StardewModdingAPI.Framework.StateTracking.Snapshots;
 using StardewModdingAPI.Framework.Utilities;
@@ -46,6 +47,7 @@ using StardewValley.Menus;
 using StardewValley.Mods;
 using StardewValley.Objects;
 using StardewValley.SDKs;
+using xTile.Display;
 using LanguageCode = StardewValley.LocalizedContentManager.LanguageCode;
 using MiniMonoModHotfix = MonoMod.Utils.MiniMonoModHotfix;
 using PathUtilities = StardewModdingAPI.Toolkit.Utilities.PathUtilities;
@@ -129,6 +131,9 @@ internal class SCore : IDisposable
 
     /// <summary>Whether the game has initialized for any custom languages from <c>Data/AdditionalLanguages</c>.</summary>
     private bool AreCustomLanguagesInitialized;
+
+    /// <summary>Whether the player just returned to the title screen.</summary>
+    public bool JustReturnedToTitle { get; set; }
 
     /// <summary>The last language set by the game.</summary>
     private (string Locale, LanguageCode Code) LastLanguage { get; set; } = ("", LanguageCode.en);
@@ -487,6 +492,10 @@ internal class SCore : IDisposable
     /// <summary>Raised after an instance finishes loading its initial content.</summary>
     private void OnInstanceContentLoaded()
     {
+        // override map display device
+        if (Constants.GameVersion.IsOlderThan("1.6.15"))
+            Game1.mapDisplayDevice = this.GetMapDisplayDevice_OBSOLETE();
+
         // log GPU info
 #if SMAPI_FOR_WINDOWS
         this.Monitor.Log($"Running on GPU: {Game1.game1.GraphicsDevice?.Adapter?.Description ?? "<unknown>"}");
@@ -603,6 +612,17 @@ internal class SCore : IDisposable
 
         try
         {
+            /*********
+            ** Reapply overrides
+            *********/
+            if (this.JustReturnedToTitle)
+            {
+                if (Game1.mapDisplayDevice is not SDisplayDevice && Constants.GameVersion.IsOlderThan("1.6.15"))
+                    Game1.mapDisplayDevice = this.GetMapDisplayDevice_OBSOLETE();
+
+                this.JustReturnedToTitle = false;
+            }
+
             /*********
             ** Execute commands
             *********/
@@ -1160,6 +1180,7 @@ internal class SCore : IDisposable
                 break;
 
             case LoadStage.None:
+                this.JustReturnedToTitle = true;
                 this.UpdateWindowTitles();
                 break;
 
@@ -2347,6 +2368,13 @@ internal class SCore : IDisposable
         return this.Settings.UseCaseInsensitivePaths
             ? CaseInsensitiveFileLookup.GetCachedFor(rootDirectory)
             : MinimalFileLookup.GetCachedFor(rootDirectory);
+    }
+
+    /// <summary>Get the map display device which applies SMAPI features like tile rotation to loaded maps.</summary>
+    /// <remarks>This only exists for backwards compatibility with Stardew Valley 1.6.14, and will be removed in the next SMAPI update. See <see cref="SGame.CreateDisplayDevice"/> instead.</remarks>
+    private IDisplayDevice GetMapDisplayDevice_OBSOLETE()
+    {
+        return new SDisplayDevice(Game1.content, Game1.game1.GraphicsDevice);
     }
 
     /// <summary>Get the absolute path to the next available log file.</summary>
