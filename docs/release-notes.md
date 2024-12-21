@@ -1,6 +1,10 @@
 ← [README](README.md)
 
 # Release notes
+## Upcoming release
+* For players:
+  * Fixed `log_context` command not disabling the extra logs when run again.
+
 ## 4.1.10
 Released 18 December 2024 for Stardew Valley 1.6.14 or later.
 
