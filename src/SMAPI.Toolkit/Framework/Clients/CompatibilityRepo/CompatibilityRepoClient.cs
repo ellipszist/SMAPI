@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Markdig;
+using Newtonsoft.Json;
 using Pathoschild.Http.Client;
 using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.Internal;
 using StardewModdingAPI.Toolkit.Framework.Clients.CompatibilityRepo.RawDataModels;
@@ -49,6 +51,25 @@ public class CompatibilityRepoClient : IDisposable
         return
             (mods.Mods ?? Array.Empty<RawModEntry>())
             .Concat(brokenContentPacks.BrokenContentPacks ?? Array.Empty<RawModEntry>())
+            .Select(this.ParseRawModEntry)
+            .ToArray();
+    }
+
+    /// <summary>Fetch mods from the compatibility list by reading a local copy of the compatibility list repo.</summary>
+    /// <param name="gitRepoPath">The full path to the compatibility list repo folder.</param>
+    public async Task<ModCompatibilityEntry[]> FetchModsFromLocalGitFolderAsync(string gitRepoPath)
+    {
+        string modsJsonPath = Path.Combine(gitRepoPath, "data", "mods.jsonc");
+        string contentPacksJsonPath = Path.Combine(gitRepoPath, "data", "broken-content-packs.jsonc");
+        if (!File.Exists(modsJsonPath) || !File.Exists(contentPacksJsonPath))
+            throw new InvalidOperationException("The compatibility list repo folder doesn't contain the required JSON files.");
+
+        RawCompatibilityList? mods = JsonConvert.DeserializeObject<RawCompatibilityList>(File.ReadAllText(modsJsonPath));
+        RawCompatibilityList? brokenContentPacks = JsonConvert.DeserializeObject<RawCompatibilityList>(File.ReadAllText(contentPacksJsonPath));
+
+        return
+            (mods?.Mods ?? Array.Empty<RawModEntry>())
+            .Concat(brokenContentPacks?.BrokenContentPacks ?? Array.Empty<RawModEntry>())
             .Select(this.ParseRawModEntry)
             .ToArray();
     }
