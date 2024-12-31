@@ -53,6 +53,9 @@ internal class LogParserController : Controller
         if (string.IsNullOrWhiteSpace(id))
             return this.View("Index", this.GetModel(id));
 
+        // don't index uploaded logs in search engines
+        this.Response.Headers["X-Robots-Tag"] = "noindex";
+
         // fetch log
         StoredFileInfo file = await this.Storage.GetAsync(id, renew);
 

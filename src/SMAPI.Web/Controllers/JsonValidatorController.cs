@@ -78,6 +78,9 @@ internal class JsonValidatorController : Controller
         if (!hasId)
             return this.View("Index", result);
 
+        // don't index uploaded files in search engines
+        this.Response.Headers["X-Robots-Tag"] = "noindex";
+
         // fetch raw JSON
         StoredFileInfo file = await this.Storage.GetAsync(id!, renew);
         if (string.IsNullOrWhiteSpace(file.Content))

@@ -8,6 +8,9 @@
 * For external tools:
   * Added toolkit method to read the compatibility list from a local copy of its Git repo.
 
+* For the web UI:
+  * Fixed search engines able to index uploaded logs and JSON files via the raw download option.
+
 ## 4.1.10
 Released 18 December 2024 for Stardew Valley 1.6.14 or later.
 
