@@ -10,6 +10,10 @@
 
 * For the web UI:
   * Fixed search engines able to index uploaded logs and JSON files via the raw download option.
+  * Improved Content Patcher JSON schema:
+    * Updated for Content Patcher 2.5.0.
+    * Added format validation for token names.
+    * Fixed incorrect error when setting a config default to a boolean or number.
 
 ## 4.1.10
 Released 18 December 2024 for Stardew Valley 1.6.14 or later.
